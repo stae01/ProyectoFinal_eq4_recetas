@@ -8,12 +8,160 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/txtTiTuloRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Registro"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <ImageView
+        android:id="@+id/imgFotoRegistroP"
+        android:layout_width="104dp"
+        android:layout_height="95dp"
+        tools:layout_editor_absoluteX="129dp"
+        tools:layout_editor_absoluteY="35dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_fotoRegistro"
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/add_circle"
+        tools:layout_editor_absoluteX="200dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre Completo: "
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="141dp" />
+
+    <EditText
+        android:id="@+id/tvNombre"
+        android:layout_width="350dp"
+        android:layout_height="46dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Name"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="160dp" />
+
+    <EditText
+        android:id="@+id/tvFechaNacimimiento"
+        android:layout_width="349dp"
+        android:layout_height="39dp"
+        android:ems="10"
+        android:inputType="date"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="241dp" />
+
+    <TextView
+        android:id="@+id/txtFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha Nacimiento:"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="222dp" />
+
+    <TextView
+        android:id="@+id/txtGenero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Género:"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="288dp" />
+
+    <RadioButton
+        android:id="@+id/rdbMasculino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Masculino"
+        tools:layout_editor_absoluteX="44dp"
+        tools:layout_editor_absoluteY="307dp" />
+
+    <RadioButton
+        android:id="@+id/rdbFemenino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Femenino"
+        tools:layout_editor_absoluteX="216dp"
+        tools:layout_editor_absoluteY="307dp" />
+
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correo Electrónico: "
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="367dp" />
+
+    <EditText
+        android:id="@+id/tvEmailRegistro"
+        android:layout_width="347dp"
+        android:layout_height="42dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="394dp" />
+
+    <TextView
+        android:id="@+id/txtContras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contraseña :"
+        tools:layout_editor_absoluteX="23dp"
+        tools:layout_editor_absoluteY="445dp" />
+
+    <EditText
+        android:id="@+id/tvContra"
+        android:layout_width="345dp"
+        android:layout_height="46dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="475dp" />
+
+    <TextView
+        android:id="@+id/txtConfirmarContras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmar Contraseña :"
+        tools:layout_editor_absoluteX="23dp"
+        tools:layout_editor_absoluteY="531dp" />
+
+    <EditText
+        android:id="@+id/tvConfirmarContra"
+        android:layout_width="347dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="559dp" />
+
+    <Button
+        android:id="@+id/btnCrearCuenta"
+        android:layout_width="139dp"
+        android:layout_height="46dp"
+        android:text="Crear Cuenta"
+        android:backgroundTint="@color/naranja"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="629dp" />
+
+    <Button
+        android:id="@+id/btnVolverPrincipal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volver"
+        tools:layout_editor_absoluteX="159dp"
+        tools:layout_editor_absoluteY="672dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
