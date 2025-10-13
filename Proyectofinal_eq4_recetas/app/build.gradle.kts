@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "mendoza.omar.proyectofinal_eq4_recetas"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "mendoza.omar.proyectofinal_eq4_recetas"
@@ -33,6 +33,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildToolsVersion = "36.0.0"
 }
 
 dependencies {
