@@ -1,4 +1,4 @@
-package martinez.kimberli.proyectofinal_eq4_recetas.ui.dashboard
+package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

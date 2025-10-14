@@ -1,4 +1,4 @@
-package martinez.kimberli.proyectofinal_eq4_recetas.ui.notifications
+package martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
