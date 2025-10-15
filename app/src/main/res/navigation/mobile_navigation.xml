@@ -8,24 +8,24 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label=""
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_crearRecetas"
-        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas.crearRecetasFragment"
+        android:label=""
         tools:layout="@layout/fragment_crear_receta" />
 
     <fragment
         android:id="@+id/navigation_favoritas"
-        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas.FavoritasFragment"
+        android:label=""
         tools:layout="@layout/fragment_favoritas" />
 
     <fragment
         android:id="@+id/navigation_perfil"
-        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas.FavoritasFragment"
+        android:label=""
         tools:layout="@layout/fragment_perfil" />
 </navigation>

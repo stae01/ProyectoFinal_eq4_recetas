@@ -1,13 +1,13 @@
-package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
+package martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class FavoritasViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is notifications Fragment"
     }
     val text: LiveData<String> = _text
 }

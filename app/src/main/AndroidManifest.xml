@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".registro.RegistroActivity"
+            android:name=".iniciar_sesion.iniciar_sesion"
             android:exported="false" />
     </application>
 

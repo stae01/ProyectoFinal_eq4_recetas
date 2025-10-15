@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentDashboardBinding
+import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentCrearRecetaBinding
 
-class DashboardFragment : Fragment() {
+class crearRecetasFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentCrearRecetaBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +22,14 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val crearRecetasViewModel =
+            ViewModelProvider(this).get(crearRecetasViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentCrearRecetaBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
+        crearRecetasViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
