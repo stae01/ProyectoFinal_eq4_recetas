@@ -5,4 +5,10 @@
     <string name="title_notifications">Notifications</string>
     <string name="tituloAgregarReceta">Agregar Receta</string>
     <string name="tituloEditarEliminarReceta">Editar / Eliminar Receta</string>
+    <string name="gender_prompt">Género</string>
+    <string-array name="gender_array">
+        <item>Masculino</item>
+        <item>Femenino</item>
+        <item>Otro</item>
+    </string-array>
 </resources>

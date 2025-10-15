@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="70dp"
+    android:height="77dp"
+    android:viewportWidth="70"
+    android:viewportHeight="77">
+    
+    <!-- Círculo de la cabeza -->
+    <path
+        android:pathData="M35,20 a15,15 0 1,0 0,0.1"
+        android:fillColor="#F67A02"
+        android:strokeWidth="3"
+        android:strokeColor="#F67A02" />
+    
+    <!-- Cuerpo -->
+    <path
+        android:pathData="M10,60 Q10,40 35,40 Q60,40 60,60 L60,77 L10,77 Z"
+        android:fillColor="#F67A02"
+        android:strokeWidth="3"
+        android:strokeColor="#F67A02" />
+</vector>
