@@ -15,6 +15,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="#FF5722"
         tools:srcCompat="@drawable/logo" />
 
     <TextView
