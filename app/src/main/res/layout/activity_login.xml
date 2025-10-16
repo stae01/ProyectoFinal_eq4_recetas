@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondoPantallas">
 
 
     <ImageView
@@ -36,12 +37,13 @@
         android:id="@+id/correo_login"
         android:layout_width="260dp"
         android:layout_height="47dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="96dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Correo"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTituloLogin"
-        tools:layout_editor_absoluteX="57dp"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -63,18 +65,19 @@
         android:id="@+id/tvContraseña"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="16dp"
         android:text="Contraseña: "
         android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/correo_login"
-        tools:layout_editor_absoluteX="57dp"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/password_login"
         android:layout_width="266dp"
         android:layout_height="42dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +89,7 @@
         android:id="@+id/btninicioSesion"
         android:layout_width="321dp"
         android:layout_height="49dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="72dp"
         android:background="@drawable/button_orange"
         android:elevation="6dp"
         android:text="Iniciar Sesión"
@@ -101,14 +104,15 @@
         android:id="@+id/tvRegistrarseLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginBottom="120dp"
         android:text="No tienes cuenta? Regístrate"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inicioSesion"
+        app:layout_constraintTop_toBottomOf="@+id/btninicioSesion"
         app:layout_constraintVertical_bias="0.355" />
 </androidx.constraintlayout.widget.ConstraintLayout>

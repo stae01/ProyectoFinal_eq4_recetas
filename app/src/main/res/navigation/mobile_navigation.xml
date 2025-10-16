@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_perfil"
-        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas.FavoritasFragment"
+        android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.PerfilUsuario.PerfilUsuarioFragment"
         android:label=""
         tools:layout="@layout/fragment_perfil" />
 </navigation>
