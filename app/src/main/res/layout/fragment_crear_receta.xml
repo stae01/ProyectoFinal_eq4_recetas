@@ -67,20 +67,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/input_background" />
+                android:src="@drawable/input_background"
+                android:layout_marginBottom="5dp"
+                />
 
             <Button
                 android:id="@+id/btnSeleccionarImagen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:backgroundTint="#FF5722"
+                android:background="@drawable/button_orange"
+                android:layout_marginBottom="10dp"
                 android:text="Seleccionar imagen" />
 
             <Button
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
+                android:background="@drawable/button_orange"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF5722"
+                android:textColor="@color/white"
                 android:text="Guardar receta" />
         </LinearLayout>
 

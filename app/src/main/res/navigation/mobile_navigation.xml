@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_favoritas" />
 
     <fragment
-        android:id="@+id/navigation_perfil"
+        android:id="@+id/navigation_perfilusuario"
         android:name="martinez.kimberli.proyectofinal_eq4_recetas.ui.PerfilUsuario.PerfilUsuarioFragment"
         android:label=""
         tools:layout="@layout/fragment_perfil" />
