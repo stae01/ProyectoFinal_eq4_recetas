@@ -28,7 +28,7 @@ class FavoritasFragment : Fragment() {
         _binding = FragmentFavoritasBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textFavoritas
+        val textView: TextView = binding.tituloFavoritos
         favoritasViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

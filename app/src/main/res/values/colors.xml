@@ -5,5 +5,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="fondoPantallas">#FAF8E8</color>
     <color name="barraBusqueda">#FDFEFC</color>
+    <color name="cafe">#8B4513</color>
 
 </resources>
