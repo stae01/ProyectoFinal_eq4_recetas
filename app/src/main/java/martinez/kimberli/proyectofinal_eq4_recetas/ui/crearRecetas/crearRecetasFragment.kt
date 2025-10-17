@@ -28,7 +28,7 @@ class crearRecetasFragment : Fragment() {
         _binding = FragmentCrearRecetaBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
+        val textView: TextView = binding.tituloAgregar
         crearRecetasViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
