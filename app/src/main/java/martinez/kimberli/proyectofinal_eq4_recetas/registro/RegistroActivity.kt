@@ -5,9 +5,17 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import martinez.kimberli.proyectofinal_eq4_recetas.R
+import martinez.kimberli.proyectofinal_eq4_recetas.MainActivity
 import java.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
+import android.view.View
+import android.content.Intent
+
 
 class RegistroActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
 
     private lateinit var etName: EditText
     private lateinit var etBirthDate: EditText
@@ -19,10 +27,12 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var btnBack: Button
     private lateinit var ivAvatar: ImageView
     private lateinit var ivAddPhoto: ImageView
+    private lateinit var tvError: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
+        auth = Firebase.auth
 
         initViews()
         setupDatePicker()
@@ -41,6 +51,8 @@ class RegistroActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         ivAvatar = findViewById(R.id.ivAvatar)
         ivAddPhoto = findViewById(R.id.ivAddPhoto)
+        tvError = findViewById(R.id.tvError)
+
     }
 
     private fun setupDatePicker() {
@@ -81,7 +93,7 @@ class RegistroActivity : AppCompatActivity() {
     private fun setupButtons() {
         btnRegister.setOnClickListener {
             if (validarFormulario()) {
-                crearCuenta()
+                crearCuentaConFirebase()
             }
         }
 
@@ -146,20 +158,33 @@ class RegistroActivity : AppCompatActivity() {
         return true
     }
 
-    private fun crearCuenta() {
+    private fun crearCuentaConFirebase() {
         val nombre = etName.text.toString().trim()
         val fecha = etBirthDate.text.toString().trim()
         val correo = etEmail.text.toString().trim()
         val contrasena = etPassword.text.toString()
         val genero = spinnerGender.selectedItem.toString()
 
-        Toast.makeText(
-            this,
-            "Cuenta creada exitosamente para $nombre",
-            Toast.LENGTH_LONG
-        ).show()
+        tvError.visibility = View.INVISIBLE
+        auth.createUserWithEmailAndPassword(correo, contrasena)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        this,
+                        "Cuenta creada exitosamente para $nombre",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        finish()
+                    startActivity(intent)
+                    finish()
+                } else {
+                    tvError.text = task.exception?.message ?: "El registro ha fallado."
+                    tvError.visibility = View.VISIBLE
+                }
+            }
+
     }
 }
 

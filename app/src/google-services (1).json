@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "308149968817",
+    "project_id": "equipo4recetas",
+    "storage_bucket": "equipo4recetas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308149968817:android:823a95ed4f5d26f43ee790",
+        "android_client_info": {
+          "package_name": "martinez.kimberli.proyectofinal_eq4_recetas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsGfU2LKm6uHRs41rc2zjeWI1NCLpmSA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
