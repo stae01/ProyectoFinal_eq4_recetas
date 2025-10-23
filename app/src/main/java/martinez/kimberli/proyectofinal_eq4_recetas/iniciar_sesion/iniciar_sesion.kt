@@ -15,6 +15,7 @@ import martinez.kimberli.proyectofinal_eq4_recetas.registro.RegistroActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 
 class iniciar_sesion: AppCompatActivity() {
 

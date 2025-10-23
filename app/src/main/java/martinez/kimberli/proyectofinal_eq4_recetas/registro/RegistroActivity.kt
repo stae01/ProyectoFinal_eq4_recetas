@@ -12,6 +12,10 @@ import com.google.firebase.auth.auth
 import com.google.firebase.Firebase
 import android.view.View
 import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.UserProfileChangeRequest
+import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 
 
 class RegistroActivity : AppCompatActivity() {
@@ -29,14 +33,23 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var ivAddPhoto: ImageView
     private lateinit var tvError: TextView
 
+    private var selectedImageUri: Uri? = null
+    private var uploadedPhotoUrl: String? = null
+    private lateinit var cloudinary: ImageCloudinary
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
         auth = Firebase.auth
+        cloudinary = ImageCloudinary()
+        cloudinary.initCloudinary(this)
+
 
         initViews()
         setupDatePicker()
         setupGeneroSpinner()
+        setupImagePicker()
         setupButtons()
     }
 
@@ -77,6 +90,8 @@ class RegistroActivity : AppCompatActivity() {
             )
             datePickerDialog.show()
         }
+
+
     }
 
     private fun setupGeneroSpinner() {
@@ -102,6 +117,31 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            ivAvatar.setImageURI(it)
+            cloudinary.uploadImage(it,true) { success, url ->
+                runOnUiThread {
+                    if (success && url != null) {
+                        uploadedPhotoUrl = url
+                    } else {
+                        uploadedPhotoUrl = null
+                        Toast.makeText(this, "Error subiendo foto. Puedes intentarlo otra vez o continuar sin foto.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupImagePicker() {
+        ivAddPhoto.setOnClickListener {
+            galleryLauncher.launch("image/*")
+        }
+        ivAvatar.setOnClickListener {
+            galleryLauncher.launch("image/*")
+        }
+    }
     private fun validarFormulario(): Boolean {
         val nombre = etName.text.toString().trim()
         val fecha = etBirthDate.text.toString().trim()
@@ -169,22 +209,38 @@ class RegistroActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(correo, contrasena)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(
-                        this,
-                        "Cuenta creada exitosamente para $nombre",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    val user = auth.currentUser
+                    val profileUpdatesBuilder = UserProfileChangeRequest.Builder()
+                        .setDisplayName(nombre)
 
-                    startActivity(intent)
-                    finish()
+                    if (!uploadedPhotoUrl.isNullOrEmpty()) {
+                        profileUpdatesBuilder.setPhotoUri(Uri.parse(uploadedPhotoUrl))
+                    }
+
+                    val profileUpdates = profileUpdatesBuilder.build()
+
+                    user?.updateProfile(profileUpdates)?.addOnCompleteListener { updateTask ->
+                        if (updateTask.isSuccessful) {
+                            // Puedes guardar info adicional en Firestore si lo deseas aquí
+                            Toast.makeText(
+                                this,
+                                "Cuenta creada exitosamente para $nombre",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            val intent = Intent(this, MainActivity::class.java)
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            tvError.text = "Error al actualizar el perfil."
+                            tvError.visibility = View.VISIBLE
+                        }
+                    }
                 } else {
                     tvError.text = task.exception?.message ?: "El registro ha fallado."
                     tvError.visibility = View.VISIBLE
                 }
             }
-
     }
 }
 

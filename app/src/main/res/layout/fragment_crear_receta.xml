@@ -184,12 +184,13 @@
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:layout_marginBottom="8dp" />
+
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchCompartir"
-            android:layout_width="match_parent"
+            android:layout_width="344dp"
             android:layout_height="wrap_content"
-            android:text="Compartir receta públicamente"
-            android:layout_marginBottom="18dp" />
+            android:layout_marginBottom="18dp"
+            android:text="Compartir  públicamente" />
 
         <TextView
             android:layout_width="wrap_content"
