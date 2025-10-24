@@ -16,7 +16,7 @@ class ImageCloudinary {
         MediaManager.init(context, config)
     }
     fun uploadImage(imageUri: Uri,isProfilePhoto: Boolean, callback: (Boolean, String?) -> Unit) {
-        val UPLOAD_PRESET = if (isProfilePhoto) "perfil" else "recetas"
+        val UPLOAD_PRESET = if (isProfilePhoto) "perfil-upload" else "recetas-upload"
         MediaManager.get()
         MediaManager.get().upload(imageUri).unsigned(UPLOAD_PRESET).callback(object : UploadCallback {
             override fun onStart(requestId: String?) {
