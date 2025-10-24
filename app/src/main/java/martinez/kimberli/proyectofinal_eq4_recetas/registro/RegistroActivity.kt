@@ -6,9 +6,11 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import martinez.kimberli.proyectofinal_eq4_recetas.R
+import android.content.Intent
 import java.util.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import martinez.kimberli.proyectofinal_eq4_recetas.iniciar_sesion.iniciar_sesion
 
 /**
  * Actividad para el registro de nuevos usuarios.
@@ -216,6 +218,9 @@ class RegistroActivity : AppCompatActivity() {
                                     "Cuenta creada exitosamente para $nombre",
                                     Toast.LENGTH_LONG
                                 ).show()
+                                val intent = Intent(this@RegistroActivity, iniciar_sesion::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
                                 finish()
                             }
                             .addOnFailureListener { e ->
