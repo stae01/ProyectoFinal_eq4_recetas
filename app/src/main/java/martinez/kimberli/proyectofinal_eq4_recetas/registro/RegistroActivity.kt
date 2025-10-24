@@ -4,9 +4,17 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import martinez.kimberli.proyectofinal_eq4_recetas.R
 import java.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * Actividad para el registro de nuevos usuarios.
+ * Permite a los usuarios ingresar sus datos personales, validar el formulario
+ * y guardar la información en una base de datos local.
+ */
 class RegistroActivity : AppCompatActivity() {
 
     private lateinit var etName: EditText
@@ -15,14 +23,27 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
     private lateinit var spinnerGender: Spinner
-    private lateinit var btnRegister: Button
-    private lateinit var btnBack: Button
+    private lateinit var btnRegister: AppCompatButton
+    private lateinit var btnBack: AppCompatButton
     private lateinit var ivAvatar: ImageView
     private lateinit var ivAddPhoto: ImageView
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
+    /**
+     * Se llama cuando la actividad es creada por primera vez.
+     * Inicializa la vista, configura el selector de fecha, el spinner de género y los botones.
+     * @param savedInstanceState Si la actividad se está recreando, este Bundle contiene los datos
+     *                           que se suministraron más recientemente en onSaveInstanceState(Bundle).
+     *                           De lo contrario, es nulo.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
+
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         initViews()
         setupDatePicker()
@@ -30,6 +51,9 @@ class RegistroActivity : AppCompatActivity() {
         setupButtons()
     }
 
+    /**
+     * Inicializa todas las vistas de la actividad obteniendo sus referencias por ID.
+     */
     private fun initViews() {
         etName = findViewById(R.id.etName)
         etBirthDate = findViewById(R.id.etBirthDate)
@@ -43,6 +67,10 @@ class RegistroActivity : AppCompatActivity() {
         ivAddPhoto = findViewById(R.id.ivAddPhoto)
     }
 
+    /**
+     * Configura el selector de fecha para el campo de fecha de nacimiento.
+     * Abre un DatePickerDialog al hacer clic en el campo.
+     */
     private fun setupDatePicker() {
         etBirthDate.isFocusable = false
         etBirthDate.isClickable = true
@@ -67,6 +95,9 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Configura el spinner para la selección de género con opciones predefinidas.
+     */
     private fun setupGeneroSpinner() {
         ArrayAdapter.createFromResource(
             this,
@@ -78,6 +109,9 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Configura los listeners de clic para los botones de registro y retroceso.
+     */
     private fun setupButtons() {
         btnRegister.setOnClickListener {
             if (validarFormulario()) {
@@ -90,6 +124,11 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida los campos del formulario de registro.
+     * Muestra mensajes de error si algún campo no cumple con los requisitos.
+     * @return `true` si el formulario es válido, `false` en caso contrario.
+     */
     private fun validarFormulario(): Boolean {
         val nombre = etName.text.toString().trim()
         val fecha = etBirthDate.text.toString().trim()
@@ -137,7 +176,7 @@ class RegistroActivity : AppCompatActivity() {
                 etConfirmPassword.requestFocus()
                 return false
             }
-            spinnerGender.selectedItemPosition == 0 -> { // Assuming "Género" is the first item
+            spinnerGender.selectedItemPosition == 0 -> { 
                 Toast.makeText(this, "Seleccione su género", Toast.LENGTH_SHORT).show()
                 return false
             }
@@ -146,6 +185,11 @@ class RegistroActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * Intenta crear una nueva cuenta de usuario.
+     * Guarda el usuario en la base de datos si el correo electrónico no está ya registrado.
+     * Muestra un mensaje de éxito o error.
+     */
     private fun crearCuenta() {
         val nombre = etName.text.toString().trim()
         val fecha = etBirthDate.text.toString().trim()
@@ -153,20 +197,42 @@ class RegistroActivity : AppCompatActivity() {
         val contrasena = etPassword.text.toString()
         val genero = spinnerGender.selectedItem.toString()
 
-        Toast.makeText(
-            this,
-            "Cuenta creada exitosamente para $nombre",
-            Toast.LENGTH_LONG
-        ).show()
-
-        finish()
+        auth.createUserWithEmailAndPassword(correo, contrasena)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.let {
+                        val userMap = hashMapOf(
+                            "nombreCompleto" to nombre,
+                            "fechaNacimiento" to fecha,
+                            "correoElectronico" to correo,
+                            "genero" to genero
+                        )
+                        firestore.collection("users").document(it.uid)
+                            .set(userMap)
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    this@RegistroActivity,
+                                    "Cuenta creada exitosamente para $nombre",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(
+                                    this@RegistroActivity,
+                                    "Error al guardar datos adicionales: ${e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                    }
+                } else {
+                    Toast.makeText(
+                        this@RegistroActivity,
+                        "Error al crear cuenta: ${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 }
-
-data class Usuario(
-    val nombreCompleto: String,
-    val fechaNacimiento: String,
-    val correoElectronico: String,
-    val contrasena: String,
-    val genero: String
-)
