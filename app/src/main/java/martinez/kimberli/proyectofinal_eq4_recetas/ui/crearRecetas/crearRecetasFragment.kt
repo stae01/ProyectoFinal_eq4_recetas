@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
+import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentCrearRecetaBinding
 
 class crearRecetasFragment : Fragment() {
@@ -26,13 +27,8 @@ class crearRecetasFragment : Fragment() {
     private lateinit var viewModel: crearRecetasViewModel
     private var imageUri: Uri? = null
 
-    private val cloudinary = Cloudinary(
-        ObjectUtils.asMap(
-            "cloud_name", " ",
-            "api_key", " ",
-            "api_secret", " "
-        )
-    )
+    private lateinit var imageCloudinary: ImageCloudinary
+
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -50,6 +46,8 @@ class crearRecetasFragment : Fragment() {
     ): android.view.View {
         _binding = FragmentCrearRecetaBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(crearRecetasViewModel::class.java)
+        imageCloudinary = ImageCloudinary()
+        imageCloudinary.initCloudinary(requireContext())
         setupUI()
         return binding.root
     }
@@ -104,43 +102,36 @@ class crearRecetasFragment : Fragment() {
             return
         }
 
-        // Subida de imagen en background
-        CoroutineScope(Dispatchers.IO).launch {
-            var imageUrl: String? = null
-
-            imageUri?.let { uri ->
-                try {
-                    val inputStream = requireContext().contentResolver.openInputStream(uri)
-                    inputStream?.use {
-                        val uploadResult = cloudinary.uploader().upload(it, ObjectUtils.emptyMap())
-                        imageUrl = uploadResult["secure_url"] as String
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Error al subir imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+        if (imageUri != null) {
+            imageCloudinary.uploadImage(imageUri!!, false) { success, url ->
+                requireActivity().runOnUiThread {
+                    if (success && url != null) {
+                        guardarRecetaFirestore(
+                            nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, url
+                        )
+                    } else {
+                        Toast.makeText(requireContext(), "Error al subir imagen de la receta", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-
-            withContext(Dispatchers.Main) {
-                viewModel.guardarReceta(
-                    nombre,
-                    tiempo,
-                    descripcion,
-                    ingredientes,
-                    pasos,
-                    etiquetas,
-                    link,
-                    publica,
-                    imageUrl
-                ) { success, message ->
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                    if (success) requireActivity().onBackPressedDispatcher.onBackPressed()
-                }
-            }
+        } else {
+            guardarRecetaFirestore(
+                nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, null
+            )
         }
     }
 
+    private fun guardarRecetaFirestore(
+        nombre: String, tiempo: String, descripcion: String, ingredientes: String, pasos: String,
+        etiquetas: List<String>, link: String?, publica: Boolean, imageUrl: String?
+    ) {
+        viewModel.guardarReceta(
+            nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, imageUrl
+        ) { success, message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            if (success) requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

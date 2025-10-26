@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ import java.util.UUID
 
 class crearRecetasViewModel : ViewModel() {
 
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
 
@@ -55,9 +55,12 @@ class crearRecetasViewModel : ViewModel() {
             "id" to UUID.randomUUID().toString()
         )
 
-        db.collection("recetas")
-            .add(receta)
-            .addOnSuccessListener { callback(true, "Receta guardada correctamente") }
-            .addOnFailureListener { e -> callback(false, "Error: ${e.message}") }
+        db.reference.child("recetas").push().setValue(receta)
+            .addOnSuccessListener {
+                callback(true, "Receta guardada correctamente")
+            }
+            .addOnFailureListener {
+                e -> callback(false, "Error: ${e.message}")
+            }
     }
 }

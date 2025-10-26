@@ -15,6 +15,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.FirebaseDatabase
+
 import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 
 
@@ -210,6 +212,8 @@ class RegistroActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
+                    val uid = user?.uid ?: return@addOnCompleteListener
+
                     val profileUpdatesBuilder = UserProfileChangeRequest.Builder()
                         .setDisplayName(nombre)
 
@@ -219,10 +223,21 @@ class RegistroActivity : AppCompatActivity() {
 
                     val profileUpdates = profileUpdatesBuilder.build()
 
-                    user?.updateProfile(profileUpdates)?.addOnCompleteListener { updateTask ->
+                    user.updateProfile(profileUpdates).addOnCompleteListener { updateTask ->
                         if (updateTask.isSuccessful) {
-                            // Puedes guardar info adicional en Firestore si lo deseas aquí
-                            Toast.makeText(
+                            val usuario = Usuario(
+                                uid = uid,
+                                nombreCompleto = nombre,
+                                fechaNacimiento = fecha,
+                                correoElectronico = correo,
+                                genero = genero,
+                                fotoPerfilUrl = uploadedPhotoUrl ?: ""
+                            )
+                            val db = FirebaseDatabase.getInstance()
+                            db.reference.child("usuarios").child(uid)
+                                .setValue(usuario)
+                                .addOnSuccessListener {
+                                Toast.makeText(
                                 this,
                                 "Cuenta creada exitosamente para $nombre",
                                 Toast.LENGTH_LONG
@@ -231,6 +246,12 @@ class RegistroActivity : AppCompatActivity() {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                             finish()
+                                 }
+                                .addOnFailureListener { e ->
+                                    tvError.text = "Error al guardar datos: ${e.message}"
+                                    tvError.visibility = View.VISIBLE
+                                }
+
                         } else {
                             tvError.text = "Error al actualizar el perfil."
                             tvError.visibility = View.VISIBLE
@@ -244,10 +265,13 @@ class RegistroActivity : AppCompatActivity() {
     }
 }
 
+
 data class Usuario(
+    val uid: String = "",
     val nombreCompleto: String,
     val fechaNacimiento: String,
     val correoElectronico: String,
-    val contrasena: String,
-    val genero: String
+    val genero: String,
+    val fotoPerfilUrl: String = ""
+
 )

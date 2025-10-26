@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -53,5 +55,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     //implementation("com.github.bumptech.glide:glide:4.16.0")
    // kapt("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.google.firebase:firebase-database:22.0.1")
     implementation("androidx.activity:activity-ktx:1.8.0")
 }
