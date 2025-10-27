@@ -1,16 +1,20 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.PerfilUsuario
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import martinez.kimberli.proyectofinal_eq4_recetas.R
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentPerfilBinding
+import martinez.kimberli.proyectofinal_eq4_recetas.iniciar_sesion.iniciar_sesion
 import java.util.Calendar
 
 class PerfilUsuarioFragment : Fragment()  {
@@ -46,6 +50,17 @@ class PerfilUsuarioFragment : Fragment()  {
         etFechaNacimiento.setOnClickListener {
             mostrarDatePicker()
         }
+
+        binding.btnCerrarSesion.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            Toast.makeText(requireContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(requireContext(), iniciar_sesion::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+
+
     }
 
     private fun mostrarDatePicker() {
