@@ -7,6 +7,8 @@
     android:background="@color/fondoPantallas"
     tools:context=".ui.PerfilUsuario.PerfilUsuarioFragment">
 
+
+
     <TextView
         android:id="@+id/textperfil"
         android:layout_width="393dp"
@@ -18,106 +20,217 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.044" />
+        app:layout_constraintVertical_bias="0.011" />
+
 
     <ImageView
         android:id="@+id/imgFotoPerfil"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="100dp"
+        android:layout_width="105dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/avatar_placeholder"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_user"
+        android:src="@drawable/ic_user_sinfondo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCambiarFoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#DED9D7"
-        android:text="Cambiar foto"
+        android:layout_width="51dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/rounded_button"
+        android:textColor="#000000"
         android:textSize="14sp"
-
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.616"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgFotoPerfil" />
+        app:layout_constraintTop_toBottomOf="@+id/textperfil" />
+
 
     <EditText
         android:id="@+id/etNombre"
-        android:layout_width="405dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/ovalo"
         android:hint="Nombre"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnCambiarFoto" />
-
+        app:layout_constraintTop_toBottomOf="@+id/imgFotoPerfil" />
 
     <EditText
         android:id="@+id/etFechaNacimiento"
-        android:layout_width="405dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/ovalo"
         android:clickable="true"
         android:focusable="false"
         android:hint="Fecha de nacimiento"
         android:inputType="none"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etNombre" />
 
     <EditText
         android:id="@+id/etGenero"
-        android:layout_width="409dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/ovalo"
         android:hint="Género"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etFechaNacimiento" />
 
     <EditText
         android:id="@+id/etCorreo"
-        android:layout_width="408dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/ovalo"
         android:enabled="false"
         android:hint="Correo electrónico"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etGenero" />
+
+    <EditText
+        android:id="@+id/etCorreo2"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="116dp"
+        android:background="@drawable/ovalo"
+        android:enabled="false"
+        android:hint="Contraseña"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etGenero" />
 
     <Button
         android:id="@+id/btnGuardar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#FF5722"
-        android:textColor="@color/white"
+        android:layout_width="220dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_orange"
-        android:text="Guardar cambios"
+        android:backgroundTint="#FF5722"
+        android:text="Aceptar"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCorreo2" />
+
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="196dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_orange"
+        android:backgroundTint="@color/cafe"
+        android:text="Volver"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etCorreo" />
+        app:layout_constraintTop_toBottomOf="@id/btnGuardar" />
 
     <Button
         android:id="@+id/btnCerrarSesion"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Cerrar sesión"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/rojo"
+        android:layout_width="171dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="88dp"
         android:background="@drawable/button_orange"
+        android:backgroundTint="@color/rojo"
+        android:text="Cerrar Sesión"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/btnGuardar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btnVolver" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="141dp"
+        android:layout_marginEnd="310dp"
+        android:layout_marginBottom="2dp"
+        android:text="Nombre"
+        android:textColor="#0B0101"
+        app:layout_constraintBottom_toTopOf="@+id/etNombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textperfil" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="310dp"
+        android:text="Fecha Nacimiento"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/etFechaNacimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNombre"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="310dp"
+        android:text="Género"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/etGenero"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etFechaNacimiento" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="13dp"
+        android:text="Correo Electrónico"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/etCorreo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etGenero" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="10dp"
+        android:text="Contraseña"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/etCorreo2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCorreo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
