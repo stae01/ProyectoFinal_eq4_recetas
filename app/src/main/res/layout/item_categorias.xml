@@ -17,10 +17,11 @@
 
         <ImageView
             android:id="@+id/categoria_img"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="60dp"
+            android:layout_height="43dp"
             android:layout_gravity="center"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_desayuno" />
 
     </androidx.cardview.widget.CardView>
 
