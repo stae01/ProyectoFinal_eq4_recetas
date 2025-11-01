@@ -57,4 +57,18 @@ dependencies {
    // kapt("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.google.firebase:firebase-database:22.0.1")
     implementation("androidx.activity:activity-ktx:1.8.0")
+
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // CardView
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    // Material Components
+    implementation("com.google.android.material:material:1.11.0")
+
+    // ViewModel y LiveData (si usas ViewModel)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
 }

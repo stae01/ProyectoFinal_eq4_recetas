@@ -55,7 +55,7 @@ android:padding="16dp">
         android:text="Asiatica"
         android:textStyle="bold"
         android:textSize="12sp"
-        android:textColor="@color/cafe"
+        android:textColor="@color/black"
         android:layout_marginBottom="8dp" />
 
     <androidx.cardview.widget.CardView
@@ -63,7 +63,7 @@ android:padding="16dp">
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        android:backgroundTint="@color/naranja">
+        android:backgroundTint="@color/orange">
 
         <TextView
             android:id="@+id/comida_etiqueta"
@@ -89,7 +89,7 @@ android:padding="16dp">
     android:layout_height="24dp"
     android:src="@drawable/ic_corazon"
     android:layout_gravity="top"
-    app:tint="@color/naranja" />
+    app:tint="@color/orange" />
 
 </LinearLayout>
     </androidx.cardview.widget.CardView>
