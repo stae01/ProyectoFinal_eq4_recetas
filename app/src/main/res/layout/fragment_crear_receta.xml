@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:paddingBottom="80dp"
     android:background="@color/fondoPantallas"
     tools:context=".ui.crearRecetas.crearRecetasFragment">
 
@@ -17,17 +18,18 @@
             android:id="@+id/tituloAgregar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:text="Agregar Receta"
+            android:textColor="@color/black"
             android:textSize="23sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/ivReceta"
-            android:layout_width="120dp"
+            android:layout_width="185dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/borde_redondeado_gris"
@@ -91,14 +93,15 @@
             android:text="Ingredientes:  "
             android:textColor="@color/black"
             android:textSize="18sp" />
+
         <EditText
             android:id="@+id/etIngredientes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingredientes"
-            android:minLines="4"
+            android:layout_height="70dp"
+            android:layout_marginBottom="16dp"
             android:gravity="top"
-            android:layout_marginBottom="16dp" />
+            android:hint="Ingredientes"
+            android:minLines="4" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,14 +109,15 @@
             android:text="Pasos de preparación:  "
             android:textColor="@color/black"
             android:textSize="18sp" />
+
         <EditText
             android:id="@+id/etPasosPreparacion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Pasos de preparación"
-            android:minLines="4"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
             android:gravity="top"
-            android:layout_marginBottom="16dp" />
+            android:hint="Pasos de preparación"
+            android:minLines="4" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,13 +130,63 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupCategorias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:chipSpacing="8dp"
-            app:singleSelection="false"
-            android:layout_marginBottom="16dp" />
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_marginBottom="16dp"
+            app:chipSpacing="6dp"
+            app:singleSelection="true">
 
-    <TextView
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDesayuno"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Desayuno" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMexicana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Mexicana" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAsiatica"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Asiática" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPostres"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Postres" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMediterranea"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Mediterránea" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAmericana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Americana" />
+        </com.google.android.material.chip.ChipGroup>
+
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Etiquetas"
@@ -160,6 +214,16 @@
             android:layout_height="wrap_content"
             android:text="+" />
     </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Enlace a fuente receta:"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupEtiquetas"
             android:layout_width="wrap_content"
@@ -167,14 +231,6 @@
             app:chipSpacing="8dp"
             android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enlace a fuente receta:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
         <EditText
             android:id="@+id/etLink"
             android:layout_width="match_parent"
@@ -187,7 +243,7 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchCompartir"
-            android:layout_width="344dp"
+            android:layout_width="385dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
             android:text="Compartir  públicamente" />
@@ -206,27 +262,24 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/btnGuardar"
-            android:layout_width="196dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_amarillo"
-            android:text="Guardar"
-            android:textSize="24sp"
-            android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_amarillo"
+                android:text="Guardar"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/button_gris"
-            android:layout_height="wrap_content"
             android:text="Cancelar"
-            android:textSize="24sp"
-            />
-        </LinearLayout>
+            android:textSize="24sp" />
 
+       </LinearLayout>
     </LinearLayout>
-
-
-
 </ScrollView>

@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.FirebaseAuth
 import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentCrearRecetaBinding
 
@@ -82,6 +83,37 @@ class crearRecetasFragment : Fragment() {
         }
     }
 
+    private fun validarCamposReceta(nombre: String, tiempo: String, descripcion: String, ingredientes: String, pasos: String ): Boolean {
+        when {
+            nombre.isEmpty() -> {
+                binding.etNombreReceta.error = "Ingresa el nombre de la receta"
+                binding.etNombreReceta.requestFocus()
+                return false
+            }
+            descripcion.isEmpty() -> {
+                binding.etDescripcionBreve.error = "Agrega una descripción"
+                binding.etDescripcionBreve.requestFocus()
+                return false
+            }
+            ingredientes.isEmpty() -> {
+                binding.etIngredientes.error = "Agrega ingredientes"
+                binding.etIngredientes.requestFocus()
+                return false
+            }
+            pasos.isEmpty() -> {
+                binding.etPasosPreparacion.error = "Agrega los pasos"
+                binding.etPasosPreparacion.requestFocus()
+                return false
+            }
+            tiempo.isEmpty() -> {
+                binding.etTiempoPreparacion.error = "Agrega tiempo de preparación"
+                binding.etTiempoPreparacion.requestFocus()
+                return false
+            }
+        }
+        return true
+    }
+
     private fun guardarReceta() {
         val nombre = binding.etNombreReceta.text.toString().trim()
         val tiempo = binding.etTiempoPreparacion.text.toString().trim()
@@ -97,10 +129,9 @@ class crearRecetasFragment : Fragment() {
             etiquetas.add(chip.text.toString())
         }
 
-        if (nombre.isEmpty() || descripcion.isEmpty()) {
-            Toast.makeText(requireContext(), "Faltan campos obligatorios", Toast.LENGTH_SHORT).show()
-            return
-        }
+        if (!validarCamposReceta(nombre, tiempo, descripcion, ingredientes, pasos)) return
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val fechaCreacion = System.currentTimeMillis()
 
         if (imageUri != null) {
             imageCloudinary.uploadImage(imageUri!!, false) { success, url ->

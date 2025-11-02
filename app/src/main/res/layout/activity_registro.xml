@@ -100,13 +100,13 @@
                 android:elevation="4dp" />
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_calendar"
                 android:contentDescription="Calendario"
+                android:src="@drawable/ic_calendar"
                 app:itemIconTint="@color/naranja" />
         </RelativeLayout>
 
