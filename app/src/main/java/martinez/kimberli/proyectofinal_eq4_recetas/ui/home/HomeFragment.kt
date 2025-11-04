@@ -17,12 +17,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import martinez.kimberli.proyectofinal_eq4_recetas.Categoria
+import martinez.kimberli.proyectofinal_eq4_recetas.CategoriaAdapter
+import martinez.kimberli.proyectofinal_eq4_recetas.Comida
 
 class HomeFragment : Fragment() {
 
     private lateinit var categoriasRecycler: RecyclerView
     private lateinit var comidasRecycler: RecyclerView
-    private lateinit var categoriasAdapter: CategoriasAdapter
+    private lateinit var categoriasAdapter: CategoriaAdapter
     private lateinit var comidasAdapter: ComidasAdapter
     private lateinit var welcomeTextView: TextView
     private val comidasList = mutableListOf<Comida>() // Declare as mutable list
@@ -87,11 +90,11 @@ class HomeFragment : Fragment() {
             Categoria("Asiática", R.drawable.ic_asiatica),
             Categoria("Postres", R.drawable.ic_postres),
             Categoria("Mexicana", R.drawable.ic_mexicana),
-            Categoria("Italiana", R.drawable.ic_italiana),
-            Categoria("Saludable", R.drawable.ic_saludable)
+            Categoria("Americana", R.drawable.ic_americana),
+            Categoria("Mediterranea", R.drawable.ic_mediterranea)
         )
 
-        categoriasAdapter = CategoriasAdapter(categorias) { categoria ->
+        categoriasAdapter = CategoriaAdapter(categorias) { categoria ->
             // Manejar click en categoría
             filtrarPorCategoria(categoria.nombre)
         }
@@ -148,7 +151,7 @@ class HomeFragment : Fragment() {
             comida.isFavorite = isFavorite
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                database.getReference("users").child(userId).child("favorites").child(comida.nombre)
+                database.getReference("favoritas").child(userId).child("favorites").child(comida.nombre)
                     .setValue(isFavorite)
             }
         }
@@ -158,7 +161,7 @@ class HomeFragment : Fragment() {
     private fun loadFavoriteComidas() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
-            database.getReference("users").child(userId).child("favorites")
+            database.getReference("favoritas").child(userId).child("favorites")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (comidaSnapshot in snapshot.children) {
@@ -187,50 +190,10 @@ class HomeFragment : Fragment() {
 }
 
 // Data classes
-data class Categoria(
-    val nombre: String,
-    val iconoRes: Int
-)
 
-data class Comida(
-    val nombre: String,
-    val categoria: String,
-    val etiqueta: String,
-    val imagenRes: Int,
-    var isFavorite: Boolean
-)
 
-// Adapter para Categorías
-class CategoriasAdapter(
-    private val categorias: List<Categoria>,
-    private val onCategoriaClick: (Categoria) -> Unit
-) : RecyclerView.Adapter<CategoriasAdapter.CategoriaViewHolder>() {
 
-    class CategoriaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardView: CardView = view.findViewById(R.id.cardCategoria)
-        val icono: ImageView = view.findViewById(R.id.iconoCategoria)
-        val nombre: TextView = view.findViewById(R.id.nombreCategoria)
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_categoria, parent, false)
-        return CategoriaViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: CategoriasAdapter.CategoriaViewHolder, position: Int) {
-        val categoria = categorias[position]
-
-        holder.icono.setImageResource(categoria.iconoRes)
-        holder.nombre.text = categoria.nombre
-
-        holder.cardView.setOnClickListener {
-            onCategoriaClick(categoria)
-        }
-    }
-
-    override fun getItemCount() = categorias.size
-}
 
 // Adapter para Comidas
 class ComidasAdapter(
