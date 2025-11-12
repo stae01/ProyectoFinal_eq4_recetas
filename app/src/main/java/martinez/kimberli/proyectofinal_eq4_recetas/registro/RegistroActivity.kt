@@ -136,6 +136,29 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    private fun esMayorDeEdad(fecha: String, edadMinima: Int): Boolean {
+        return try {
+            val partes = fecha.split("/")
+            if (partes.size != 3) return false
+            val dia = partes[0].toInt()
+            val mes = partes[1].toInt() - 1
+            val ano = partes[2].toInt()
+
+            val nacimiento = Calendar.getInstance().apply {
+                set(ano, mes, dia)
+            }
+            val hoy = Calendar.getInstance()
+            val anosDiferencia = hoy.get(Calendar.YEAR) - nacimiento.get(Calendar.YEAR)
+            val cumpleEsteAno = hoy.get(Calendar.DAY_OF_YEAR) >= nacimiento.get(Calendar.DAY_OF_YEAR)
+
+            return if (anosDiferencia > edadMinima) true
+            else if (anosDiferencia == edadMinima) cumpleEsteAno
+            else false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun setupImagePicker() {
         ivAddPhoto.setOnClickListener {
             galleryLauncher.launch("image/*")
@@ -159,6 +182,10 @@ class RegistroActivity : AppCompatActivity() {
             }
             fecha.isEmpty() -> {
                 Toast.makeText(this, "Seleccione su fecha de nacimiento", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            !esMayorDeEdad(fecha, 17) -> {
+                Toast.makeText(this, "Debes tener al menos 17 años,para registrarte", Toast.LENGTH_SHORT).show()
                 return false
             }
             correo.isEmpty() -> {

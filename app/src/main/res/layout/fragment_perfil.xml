@@ -149,6 +149,7 @@
         app:layout_constraintTop_toBottomOf="@id/btnGuardar" />
 
     <Button
+
         android:id="@+id/btnCerrarSesion"
         android:layout_width="171dp"
         android:layout_height="44dp"
@@ -161,7 +162,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVolver" />
+       />
 
     <TextView
         android:id="@+id/textView2"

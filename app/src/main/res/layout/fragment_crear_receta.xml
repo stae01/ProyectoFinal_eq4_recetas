@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="25dp"
     android:background="@color/fondoPantallas"
     tools:context=".ui.crearRecetas.crearRecetasFragment">
 
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/tituloAgregar"
@@ -288,7 +289,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+            android:layout_marginBottom="54dp">
 
         <Button
             android:id="@+id/btnGuardar"
@@ -298,15 +300,15 @@
             android:text="Guardar"
             android:textSize="24sp"
             android:textColor="@color/white" />
-        <Button
-            android:id="@+id/btnCancelar"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_gris"
-            android:layout_height="wrap_content"
-            android:text="Cancelar"
-            android:textSize="24sp"
-            />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_gris"
+                android:text="Cancelar"
+                android:textSize="24sp" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
