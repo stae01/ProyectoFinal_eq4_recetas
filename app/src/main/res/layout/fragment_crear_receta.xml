@@ -24,10 +24,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="4dp" />
+
         <ImageView
             android:id="@+id/ivReceta"
-            android:layout_width="120dp"
+            android:layout_width="199dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/borde_redondeado_gris"
@@ -54,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="pasta carbonara"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="6dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +69,7 @@
             android:layout_height="wrap_content"
             android:hint="ej: 30 minutos"
             android:inputType="number"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="6dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,7 +84,7 @@
             android:layout_height="wrap_content"
             android:hint="receta de fiedos con tocino"
             android:maxLines="3"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="6dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,14 +92,15 @@
             android:text="Ingredientes:  "
             android:textColor="@color/black"
             android:textSize="18sp" />
+
         <EditText
             android:id="@+id/etIngredientes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingredientes"
-            android:minLines="4"
+            android:layout_height="61dp"
+            android:layout_marginBottom="6dp"
             android:gravity="top"
-            android:layout_marginBottom="16dp" />
+            android:hint="Ingredientes"
+            android:minLines="4" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,14 +108,15 @@
             android:text="Pasos de preparación:  "
             android:textColor="@color/black"
             android:textSize="18sp" />
+
         <EditText
             android:id="@+id/etPasosPreparacion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Pasos de preparación"
-            android:minLines="4"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
             android:gravity="top"
-            android:layout_marginBottom="16dp" />
+            android:hint="Pasos de preparación"
+            android:minLines="4" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -122,15 +125,94 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="5dp" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupCategorias"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             app:chipSpacing="8dp"
-            app:singleSelection="false"
-            android:layout_marginBottom="16dp" />
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDesayuno"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Desayuno"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMexicana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Mexicana"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAsiatica"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Asiática"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPostres"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Postres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMediterranea"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Mediterránea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAmericana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checkable="true"
+                android:text="Americana"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+        </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:layout_width="wrap_content"
@@ -165,7 +247,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:chipSpacing="8dp"
-            android:layout_marginBottom="16dp" />
+            android:textColor="@color/black"
+
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -224,6 +308,9 @@
             android:textSize="24sp"
             />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
 
     </LinearLayout>
 
