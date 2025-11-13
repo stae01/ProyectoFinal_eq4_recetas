@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener
 import martinez.kimberli.proyectofinal_eq4_recetas.Categoria
 import martinez.kimberli.proyectofinal_eq4_recetas.CategoriaAdapter
 import martinez.kimberli.proyectofinal_eq4_recetas.Comida
+import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -27,50 +28,15 @@ class HomeFragment : Fragment() {
     private lateinit var comidasRecycler: RecyclerView
     private lateinit var categoriasAdapter: CategoriaAdapter
     private lateinit var comidasAdapter: ComidasAdapter
+    private val comidasList = mutableListOf<Comida>()
     private lateinit var welcomeTextView: TextView
-    private val comidasList = mutableListOf<Comida>() // Declare as mutable list
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import martinez.kimberli.proyectofinal_eq4_recetas.Categorias.Categoria
-import martinez.kimberli.proyectofinal_eq4_recetas.Categorias.CategoriaAdapter
-import martinez.kimberli.proyectofinal_eq4_recetas.R
-import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentHomeBinding
-
-class HomeFragment : Fragment() {
-
-    private lateinit var categoriaAdapter: CategoriaAdapter
-
-    private var _binding: FragmentHomeBinding? = null
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        categoriaAdapter = CategoriaAdapter(categorias) { categoria ->
-
-        }
-
-        binding.categoriasRecycler.apply {
-            adapter = categoriaAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-        return root
-
-
-    }
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,17 +54,12 @@ class HomeFragment : Fragment() {
     private fun loadUserName() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
-            database.getReference("users").child(userId).child("name")
+            database.getReference("usuarios").child(userId).child("nombreCompleto")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val userName = snapshot.getValue(String::class.java)
-                        if (userName != null) {
-                            welcomeTextView.text = "Hola, $userName!"
-                        } else {
-                            welcomeTextView.text = "Hola!"
-                        }
+                        welcomeTextView.text = "Hola, ${userName ?: ""}!"
                     }
-
                     override fun onCancelled(error: DatabaseError) {
                         welcomeTextView.text = "Hola!"
                     }
@@ -110,11 +71,8 @@ class HomeFragment : Fragment() {
 
     private fun setupCategoriasRecycler(view: View) {
         categoriasRecycler = view.findViewById(R.id.categorias_recycler)
-        categoriasRecycler.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
+        categoriasRecycler.layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.HORIZONTAL, false)
 
         val categorias = listOf(
             Categoria("Desayuno", R.drawable.ic_desayuno),
@@ -126,7 +84,6 @@ class HomeFragment : Fragment() {
         )
 
         categoriasAdapter = CategoriaAdapter(categorias) { categoria ->
-            // Manejar click en categoría
             filtrarPorCategoria(categoria.nombre)
         }
         categoriasRecycler.adapter = categoriasAdapter
@@ -136,53 +93,24 @@ class HomeFragment : Fragment() {
         comidasRecycler = view.findViewById(R.id.itemComidas_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        // Initialize comidasList with default items
+        // Inicializa la lista con comidas por defecto
         comidasList.addAll(listOf(
-            Comida(
-                "Ramen AKai",
-                "Sopas",
-                "Saludable",
-                R.drawable.ramen,
-                false
-            ),
-            Comida(
-                "Sopa Miso",
-                "Sopas",
-                "Asia",
-                R.drawable.miso,
-                false
-            ),
-            Comida(
-                "Chilaquiles",
-                "Mexicana",
-                "Desayuno",
-                R.drawable.chilaquiles,
-                false
-            ),
-            Comida(
-                "Pad Thai",
-                "Asiática",
-                "Asia",
-                R.drawable.pad_thai,
-                false
-            ),
-            Comida(
-                "Pancakes",
-                "Americana",
-                "Desayuno",
-                R.drawable.pancakes,
-                false
-            )
+            Comida("Ramen AKai", "Asiática", "Saludable", R.drawable.ramen, false),
+            Comida("Sopa Miso", "Asiática", "Asia", R.drawable.miso, false),
+            Comida("Chilaquiles", "Mexicana", "Desayuno", R.drawable.chilaquiles, false),
+            Comida("Pad Thai", "Asiática", "Asia", R.drawable.pad_thai, false),
+            Comida("Pancakes", "Americana", "Desayuno", R.drawable.pancakes, false)
         ))
 
-        loadFavoriteComidas() // Load favorite status from Firebase
+        loadFavoriteComidas()
 
         comidasAdapter = ComidasAdapter(comidasList) { comida, isFavorite ->
-            // Manejar click en favorito
             comida.isFavorite = isFavorite
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                database.getReference("favoritas").child(userId).child("favorites").child(comida.nombre)
+                database.getReference("favoritasUsuarios")
+                    .child(userId).child("favorites")
+                    .child(comida.nombre)
                     .setValue(isFavorite)
             }
         }
@@ -190,39 +118,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadFavoriteComidas() {
-        val userId = auth.currentUser?.uid
-        if (userId != null) {
-            database.getReference("favoritas").child(userId).child("favorites")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (comidaSnapshot in snapshot.children) {
-                            val comidaName = comidaSnapshot.key
-                            val isFavorite = comidaSnapshot.getValue(Boolean::class.java) ?: false
+        val userId = auth.currentUser?.uid ?: return
+        database.getReference("favoritas").child(userId).child("favorites")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (comidaSnapshot in snapshot.children) {
+                        val comidaName = comidaSnapshot.key
+                        val isFavorite = comidaSnapshot.getValue(Boolean::class.java) ?: false
 
-                            val index = comidasList.indexOfFirst { it.nombre == comidaName }
-                            if (index != -1) {
-                                comidasList[index].isFavorite = isFavorite
-                            }
+                        val index = comidasList.indexOfFirst { it.nombre == comidaName }
+                        if (index != -1) {
+                            comidasList[index].isFavorite = isFavorite
                         }
-                        comidasAdapter.notifyDataSetChanged() // Notify adapter after updating data
                     }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        // Handle error
-                    }
-                })
-        }
+                    comidasAdapter.notifyDataSetChanged()
+                }
+                override fun onCancelled(error: DatabaseError) { }
+            })
     }
 
     private fun filtrarPorCategoria(categoria: String) {
-        // Implementar filtro de categorías
-        // Por ahora solo muestra un mensaje
+        // Implementar filtro real aquí.
+        // Por ejemplo:
+        val comidasFiltradas = comidasList.filter { it.categoria == categoria }
+        comidasAdapter = ComidasAdapter(comidasFiltradas) { comida, isFavorite ->
+            // actualizar favorito como antes
+        }
+        comidasRecycler.adapter = comidasAdapter
     }
 }
-
-// Data classes
-
-
 
 
 
@@ -233,23 +157,22 @@ class ComidasAdapter(
 ) : RecyclerView.Adapter<ComidasAdapter.ComidaViewHolder>() {
 
     class ComidaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val imagen: ImageView = view.findViewById(R.id.comida_imagen)
         val cardView: CardView = view.findViewById(R.id.cardComida)
-        val imagen: ImageView = view.findViewById(R.id.imagenComida)
-        val nombre: TextView = view.findViewById(R.id.nombreComida)
-        val categoria: TextView = view.findViewById(R.id.categoriaComida)
-        val etiqueta: Chip = view.findViewById(R.id.etiquetaComida)
-        val iconFavorito: ImageView = view.findViewById(R.id.iconFavorito)
+        val nombre: TextView = view.findViewById(R.id.comida_nombre)
+        val categoria: TextView = view.findViewById(R.id.comida_categoria)
+        val etiqueta: TextView = view.findViewById(R.id.comida_etiqueta)
+        val iconFavorito: ImageView = view.findViewById(R.id.favorite_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComidaViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_comida, parent, false)
+            .inflate(R.layout.item_comidas, parent, false)
         return ComidaViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ComidasAdapter.ComidaViewHolder, position: Int) {
         val comida = comidas[position]
-
         holder.nombre.text = comida.nombre
         holder.categoria.text = comida.categoria
         holder.etiqueta.text = comida.etiqueta
@@ -281,13 +204,6 @@ class ComidasAdapter(
 
     override fun getItemCount() = comidas.size
 }
-    private val categorias = listOf(
-        Categoria("Desayuno", R.drawable.ic_desayuno),
-        Categoria("Mexicana", R.drawable.ic_mexicana),
-        Categoria("Asiática", R.drawable.ic_asiatica),
-        Categoria("Postres", R.drawable.ic_postres),
-        Categoria("Mediterránea", R.drawable.ic_mediterranea),
-        Categoria("Americana", R.drawable.ic_americana)
-    )
 
-}
+
+

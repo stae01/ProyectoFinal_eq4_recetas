@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="16dp"
+    android:id="@+id/cardComida"
     app:cardElevation="2dp"
     android:backgroundTint="@color/white">
 
@@ -22,7 +23,7 @@ android:padding="16dp">
     app:cardElevation="0dp">
 
     <ImageView
-        android:id="@+id/food_image"
+        android:id="@+id/comida_imagen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />

@@ -95,7 +95,7 @@
             tools:itemCount="4"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:orientation="horizontal"
-            tools:listitem="@layout/item_categoria" />
+            tools:listitem="@layout/item_categorias" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
             android:clipToPadding="false"
             tools:itemCount="4"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_comida" />
+            tools:listitem="@layout/item_comidas" />
 
     </LinearLayout>
 
