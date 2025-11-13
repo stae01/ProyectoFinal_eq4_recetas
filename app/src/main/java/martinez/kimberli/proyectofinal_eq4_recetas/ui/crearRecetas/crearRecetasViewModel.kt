@@ -2,6 +2,7 @@ package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,7 @@ import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,15 +54,17 @@ class crearRecetasViewModel : ViewModel() {
             "imagenUrl" to imageUrl,
             "usuarioId" to user.uid,
             "usuarioEmail" to user.email,
-            "id" to UUID.randomUUID().toString()
+            "id" to UUID.randomUUID().toString(),
+            "fechaCreacion" to ServerValue.TIMESTAMP
         )
 
         db.reference.child("recetas").push().setValue(receta)
             .addOnSuccessListener {
                 callback(true, "Receta guardada correctamente")
             }
-            .addOnFailureListener {
-                e -> callback(false, "Error: ${e.message}")
+            .addOnFailureListener { e ->
+                Log.e("Firebase", "Error al guardar receta: ${e.message}")
+                callback(false, "Error: ${e.message}")
             }
     }
 }

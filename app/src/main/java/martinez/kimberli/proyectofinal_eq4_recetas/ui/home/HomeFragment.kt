@@ -1,6 +1,7 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,31 +91,59 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupComidasRecycler(view: View) {
+
         comidasRecycler = view.findViewById(R.id.itemComidas_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         // Inicializa la lista con comidas por defecto
-        comidasList.addAll(listOf(
+        val comidasList = mutableListOf<Comida>(
             Comida("Ramen AKai", "Asiática", "Saludable", R.drawable.ramen, false),
             Comida("Sopa Miso", "Asiática", "Asia", R.drawable.miso, false),
             Comida("Chilaquiles", "Mexicana", "Desayuno", R.drawable.chilaquiles, false),
             Comida("Pad Thai", "Asiática", "Asia", R.drawable.pad_thai, false),
             Comida("Pancakes", "Americana", "Desayuno", R.drawable.pancakes, false)
-        ))
+        )
 
-        loadFavoriteComidas()
+        // Cargar las recetas desde Firebase
+        val recetasRef = database.reference.child("recetas")
 
-        comidasAdapter = ComidasAdapter(comidasList) { comida, isFavorite ->
-            comida.isFavorite = isFavorite
-            val userId = auth.currentUser?.uid
-            if (userId != null) {
-                database.getReference("favoritasUsuarios")
-                    .child(userId).child("favorites")
-                    .child(comida.nombre)
-                    .setValue(isFavorite)
+        recetasRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val comidasFirebase = mutableListOf<Comida>()
+
+                // Agregar las recetas cargadas desde Firebase
+                for (recetaSnapshot in snapshot.children) {
+                    val receta = recetaSnapshot.getValue(Comida::class.java)
+                    receta?.let {
+                        comidasFirebase.add(it)
+                    }
+                }
+
+                // Agregar las comidas por defecto + las cargadas desde Firebase
+                val allComidas = comidasList + comidasFirebase
+
+                // Actualizar el adaptador con la lista combinada
+                comidasAdapter = ComidasAdapter(allComidas) { comida, isFavorite ->
+                    comida.isFavorite = isFavorite
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        database.getReference("favoritasUsuarios")
+                            .child(userId).child("favorites")
+                            .child(comida.nombre)
+                            .setValue(isFavorite)
+                    }
+                }
+
+                comidasRecycler.adapter = comidasAdapter
             }
-        }
-        comidasRecycler.adapter = comidasAdapter
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar errores aquí
+                Log.e("Firebase", "Error al cargar recetas: ${error.message}")
+            }
+        })
+
+
     }
 
     private fun loadFavoriteComidas() {
