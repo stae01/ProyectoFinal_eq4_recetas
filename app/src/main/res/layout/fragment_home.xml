@@ -97,6 +97,16 @@
             tools:orientation="horizontal"
             tools:listitem="@layout/item_categorias" />
 
+        <ToggleButton
+            android:id="@+id/toggleRecetas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textOn="Todas"
+            android:textOff="Mis recetas"
+            android:checked="true"
+            android:layout_margin="8dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

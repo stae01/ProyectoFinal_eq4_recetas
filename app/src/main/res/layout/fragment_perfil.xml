@@ -136,33 +136,21 @@
         app:layout_constraintTop_toBottomOf="@+id/etCorreo2" />
 
     <Button
-        android:id="@+id/btnVolver"
-        android:layout_width="196dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/button_orange"
-        android:backgroundTint="@color/black"
-        android:text="Volver"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnGuardar" />
-
-    <Button
 
         android:id="@+id/btnCerrarSesion"
         android:layout_width="171dp"
         android:layout_height="44dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/button_orange"
         android:backgroundTint="@color/black"
         android:text="Cerrar Sesión"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toStartOf="parent"
-       />
+        app:layout_constraintTop_toBottomOf="@+id/btnGuardar"
+        app:layout_constraintVertical_bias="0.875" />
 
     <TextView
         android:id="@+id/textView2"
