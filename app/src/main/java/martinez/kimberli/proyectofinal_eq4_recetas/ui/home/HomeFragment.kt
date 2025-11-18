@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,9 +33,11 @@ class HomeFragment : Fragment() {
     private lateinit var comidasAdapter: ComidasAdapter
     private val comidasList = mutableListOf<Comida>()
     private lateinit var welcomeTextView: TextView
-
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+    private lateinit var btnTodas: Button
+    private lateinit var btnMisRecetas: Button
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -50,6 +54,17 @@ class HomeFragment : Fragment() {
 
         setupCategoriasRecycler(view)
         setupComidasRecycler(view)
+        btnTodas = view.findViewById(R.id.btnTodas)
+        btnMisRecetas = view.findViewById(R.id.btnPropias)
+
+        btnTodas.setOnClickListener {
+            setToggleSelected(true)
+            mostrarTodasRecetas()
+        }
+        btnMisRecetas.setOnClickListener {
+            setToggleSelected(false)
+            mostrarMisRecetas()
+        }
     }
 
     private fun loadUserName() {
@@ -90,18 +105,38 @@ class HomeFragment : Fragment() {
         categoriasRecycler.adapter = categoriasAdapter
     }
 
-    private fun setupComidasRecycler(view: View) {
+    private fun setToggleSelected(TodasSelected: Boolean) {
+        if (TodasSelected) {
+            btnTodas.setBackgroundResource(R.drawable.toggle_seleccionado_bg)
+            btnTodas.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            btnMisRecetas.setBackgroundResource(R.drawable.toggle_noseleccionado_bg)
+            btnMisRecetas.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        } else {
+            btnMisRecetas.setBackgroundResource(R.drawable.toggle_seleccionado_bg)
+            btnMisRecetas.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            btnTodas.setBackgroundResource(R.drawable.toggle_noseleccionado_bg)
+            btnTodas.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        }
+    }
 
+    private fun mostrarTodasRecetas() {
+
+    }
+    private fun mostrarMisRecetas() {
+
+    }
+    private fun setupComidasRecycler(view: View) {
         comidasRecycler = view.findViewById(R.id.itemComidas_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         // Inicializa la lista con comidas por defecto
         val comidasList = mutableListOf<Comida>(
-            Comida("Ramen AKai", "Asiática", "Saludable", R.drawable.ramen, false),
-            Comida("Sopa Miso", "Asiática", "Asia", R.drawable.miso, false),
-            Comida("Chilaquiles", "Mexicana", "Desayuno", R.drawable.chilaquiles, false),
-            Comida("Pad Thai", "Asiática", "Asia", R.drawable.pad_thai, false),
-            Comida("Pancakes", "Americana", "Desayuno", R.drawable.pancakes, false)
+
+            Comida("Ramen AKai", "Asiática", "Saludable", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.ramen, true),
+            Comida("Sopa Miso", "Asiática", "Asia", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.miso, false),
+            Comida("Chilaquiles", "Mexicana", "Desayuno", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.chilaquiles, false),
+            Comida("Pad Thai", "Asiática", "Asia", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.pad_thai, false),
+            Comida("Pancakes", "Americana", "Desayuno","holi","papa,zana","123",true,"20","23","kimi@", R.drawable.pancakes, true)
         )
 
         // Cargar las recetas desde Firebase
@@ -145,6 +180,7 @@ class HomeFragment : Fragment() {
 
 
     }
+
 
     private fun loadFavoriteComidas() {
         val userId = auth.currentUser?.uid ?: return

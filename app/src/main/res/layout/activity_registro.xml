@@ -33,7 +33,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/avatar_placeholder"
-                android:contentDescription="Avatar" />
+                android:contentDescription="Avatar"
+                />
 
             <ImageView
                 android:id="@+id/ivAddPhoto"
@@ -226,7 +227,9 @@
             android:textAllCaps="false"
             android:background="@drawable/button_orange"
             android:elevation="6dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            app:backgroundTint="@null"
+            />
 
         <Button
             android:id="@+id/btnBack"
@@ -239,7 +242,9 @@
             android:textAllCaps="false"
             android:background="@drawable/button_brown"
             android:elevation="6dp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            app:backgroundTint="@null"
+            />
 
     </LinearLayout>
 </ScrollView>

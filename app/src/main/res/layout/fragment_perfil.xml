@@ -49,7 +49,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.616"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textperfil" />
+        app:layout_constraintTop_toBottomOf="@+id/textperfil"
+        app:backgroundTint="@null"
+        />
 
 
     <EditText
@@ -127,13 +129,15 @@
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_orange"
-        android:backgroundTint="#FF5722"
+        android:backgroundTint="@color/orange"
         android:text="Aceptar"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etCorreo2" />
+        app:layout_constraintTop_toBottomOf="@+id/etCorreo2"
+        app:backgroundTint="@null"
+        />
 
     <Button
 
@@ -142,7 +146,7 @@
         android:layout_height="44dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/button_orange"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/cafe"
         android:text="Cerrar Sesión"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -150,7 +154,9 @@
         app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGuardar"
-        app:layout_constraintVertical_bias="0.434" />
+        app:layout_constraintVertical_bias="0.434"
+        app:backgroundTint="@null"
+        />
 
     <TextView
         android:id="@+id/textView2"
