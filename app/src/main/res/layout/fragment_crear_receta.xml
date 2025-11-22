@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/tituloAgregar"
             android:layout_width="wrap_content"
@@ -139,8 +138,7 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/chipDesayuno"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
-            android:text="Desayuno"
+            android:text="Desayuno y brunch"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,38 +148,58 @@
 
             />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPostres"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Platos principales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAmericana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Aperitivos y entrantes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+
+                />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMediterranea"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Sopas y cremas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+
+                />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAsiatica"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Guarniciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                />
         <com.google.android.material.chip.Chip
             android:id="@+id/chipMexicana"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
-            android:text="Mexicana"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-
-            />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAsiatica"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
-            android:text="Asiática"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-
-            />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPostres"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
             android:text="Postres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -189,35 +207,6 @@
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
-
-            />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipMediterranea"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
-            android:text="Mediterránea"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-
-
-            />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAmericana"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checkable="true"
-            android:text="Americana"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="12sp"
 
             />
     </com.google.android.material.chip.ChipGroup>

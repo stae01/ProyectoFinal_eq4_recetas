@@ -60,6 +60,7 @@
                     app:tint="@color/black" />
 
                 <EditText
+                    android:id="@+id/etBuscarRecetas"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -114,7 +115,7 @@
                 android:background="@drawable/toggle_seleccionado_bg"
                 android:paddingLeft="22dp"
                 android:paddingRight="22dp"
-                android:text="Todas las recetas"
+                android:text="   Todas   "
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -125,7 +126,7 @@
                 android:id="@+id/btnPropias"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mis recetas "
+                android:text="Mis recetas"
                 android:background="@drawable/toggle_noseleccionado_bg"
                 android:textColor="@color/black"
                 android:paddingLeft="22dp"
@@ -152,12 +153,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="100dp"
+            android:clipToPadding="false"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:clipToPadding="false"
             tools:itemCount="4"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_comidas" />
 
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

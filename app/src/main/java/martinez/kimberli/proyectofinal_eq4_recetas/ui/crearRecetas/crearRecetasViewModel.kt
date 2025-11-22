@@ -1,22 +1,10 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
 
-import android.app.Application
-import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.cloudinary.Cloudinary
-import com.cloudinary.utils.ObjectUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
 import java.util.UUID
 
 class crearRecetasViewModel : ViewModel() {
@@ -25,46 +13,13 @@ class crearRecetasViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
 
-    fun guardarReceta(
-        nombre: String,
-        tiempo: String,
-        descripcion: String,
-        ingredientes: String,
-        pasos: String,
-        etiquetas: List<String>,
-        link: String?,
-        publica: Boolean,
-        imageUrl: String?,
+    fun guardarRecetaEnFirebase(
+        recetaMap: HashMap<String, Any?>,
         callback: (Boolean, String) -> Unit
     ) {
-        val user = auth.currentUser ?: run {
-            callback(false, "Usuario no autenticado")
-            return
-        }
-
-        val receta = hashMapOf(
-            "nombre" to nombre,
-            "tiempo" to tiempo,
-            "descripcion" to descripcion,
-            "ingredientes" to ingredientes,
-            "pasos" to pasos,
-            "etiquetas" to etiquetas,
-            "link" to link,
-            "publica" to publica,
-            "imagenUrl" to imageUrl,
-            "usuarioId" to user.uid,
-            "usuarioEmail" to user.email,
-            "id" to UUID.randomUUID().toString(),
-            "fechaCreacion" to ServerValue.TIMESTAMP
-        )
-
-        db.reference.child("recetas").push().setValue(receta)
-            .addOnSuccessListener {
-                callback(true, "Receta guardada correctamente")
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firebase", "Error al guardar receta: ${e.message}")
-                callback(false, "Error: ${e.message}")
-            }
+        val db = FirebaseDatabase.getInstance()
+        db.reference.child("recetas").push().setValue(recetaMap)
+            .addOnSuccessListener { callback(true, "Receta guardada correctamente") }
+            .addOnFailureListener { callback(false, "Error: ${it.message}") }
     }
 }

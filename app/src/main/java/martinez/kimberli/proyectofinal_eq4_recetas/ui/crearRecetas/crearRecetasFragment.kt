@@ -2,14 +2,18 @@ package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ServerValue
 import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentCrearRecetaBinding
+import java.util.UUID
 
 class crearRecetasFragment : Fragment() {
 
@@ -89,17 +93,36 @@ class crearRecetasFragment : Fragment() {
             etiquetas.add(chip.text.toString())
         }
 
-        if (nombre.isEmpty() || descripcion.isEmpty()) {
+        // Recoge la categoría seleccionada del ChipGroup
+        val chipGroup = binding.chipGroupCategorias
+        val selectedChipId = chipGroup.checkedChipId
+        val categoriaSeleccionada: String? = if (selectedChipId != View.NO_ID) {
+            val selectedChip: Chip = chipGroup.findViewById(selectedChipId)
+            selectedChip.text.toString()
+        } else null
+
+        // Validación de datos obligatorios
+        if (nombre.isEmpty() || descripcion.isEmpty() || categoriaSeleccionada == null) {
             Toast.makeText(requireContext(), "Faltan campos obligatorios", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Sube primero la imagen si se eligió alguna
         if (imageUri != null) {
             imageCloudinary.uploadImage(imageUri!!, false) { success, url ->
                 requireActivity().runOnUiThread {
                     if (success && url != null) {
-                        guardarRecetaFirestore(
-                            nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, url
+                        guardarRecetaFirebase(
+                            nombre,
+                            categoriaSeleccionada,
+                            tiempo,
+                            descripcion,
+                            ingredientes,
+                            pasos,
+                            etiquetas,
+                            link,
+                            publica,
+                            url
                         )
                     } else {
                         Toast.makeText(requireContext(), "Error al subir imagen de la receta", Toast.LENGTH_SHORT).show()
@@ -107,18 +130,60 @@ class crearRecetasFragment : Fragment() {
                 }
             }
         } else {
-            guardarRecetaFirestore(
-                nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, null
+            guardarRecetaFirebase(
+                nombre,
+                categoriaSeleccionada,
+                tiempo,
+                descripcion,
+                ingredientes,
+                pasos,
+                etiquetas,
+                link,
+                publica,
+                null
             )
         }
     }
 
-    private fun guardarRecetaFirestore(
-        nombre: String, tiempo: String, descripcion: String, ingredientes: String, pasos: String,
-        etiquetas: List<String>, link: String?, publica: Boolean, imageUrl: String?
+    private fun guardarRecetaFirebase(
+        nombre: String,
+        categoria: String,
+        tiempo: String,
+        descripcion: String,
+        ingredientes: String,
+        pasos: String,
+        etiquetas: List<String>,
+        link: String?,
+        publica: Boolean,
+        imageUrl: String?
     ) {
-        viewModel.guardarReceta(
-            nombre, tiempo, descripcion, ingredientes, pasos, etiquetas, link, publica, imageUrl
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Llenar el mapa para que coincida con tu modelo y Firebase
+        val receta = hashMapOf(
+            "nombre" to nombre,
+            "categoria" to categoria,
+            "etiquetas" to etiquetas,
+            "tiempo" to tiempo,
+            "descripcion" to descripcion,
+            "ingredientes" to ingredientes,
+            "pasos" to pasos,
+            "publica" to publica,
+            "imagenUrl" to (imageUrl ?: ""),
+            "usuarioId" to user.uid,
+            "usuarioEmail" to user.email,
+            "link" to (link ?: ""),
+            "id" to UUID.randomUUID().toString(),
+            "fechaCreacion" to ServerValue.TIMESTAMP,
+            "isFavorite" to false
+        )
+
+        viewModel.guardarRecetaEnFirebase(
+            receta
         ) { success, message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             if (success) requireActivity().onBackPressedDispatcher.onBackPressed()

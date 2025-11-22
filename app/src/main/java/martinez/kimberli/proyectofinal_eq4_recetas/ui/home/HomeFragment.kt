@@ -1,11 +1,14 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -13,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import martinez.kimberli.proyectofinal_eq4_recetas.R
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
@@ -31,12 +35,18 @@ class HomeFragment : Fragment() {
     private lateinit var comidasRecycler: RecyclerView
     private lateinit var categoriasAdapter: CategoriaAdapter
     private lateinit var comidasAdapter: ComidasAdapter
-    private val comidasList = mutableListOf<Comida>()
     private lateinit var welcomeTextView: TextView
+    private lateinit var etBuscarRecetas: EditText
+
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var btnTodas: Button
     private lateinit var btnMisRecetas: Button
+
+    private val todasComidas = mutableListOf<Comida>()
+    private var comidasFiltradas = mutableListOf<Comida>()
+    private var filtroCategoria: String? = null
+    private var mostrarSoloMisRecetas = false
 
 
     override fun onCreateView(
@@ -50,22 +60,34 @@ class HomeFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
 
         welcomeTextView = view.findViewById(R.id.welcome_text_view)
-        loadUserName()
+        etBuscarRecetas = view.findViewById(R.id.etBuscarRecetas)
 
-        setupCategoriasRecycler(view)
-        setupComidasRecycler(view)
         btnTodas = view.findViewById(R.id.btnTodas)
         btnMisRecetas = view.findViewById(R.id.btnPropias)
 
+        loadUserName()
+        setupCategoriasRecycler(view)
+        setupComidasRecycler(view)
+        cargarTodasLasRecetas()
+
         btnTodas.setOnClickListener {
             setToggleSelected(true)
-            mostrarTodasRecetas()
+            mostrarSoloMisRecetas = false
+            aplicarFiltros(etBuscarRecetas.text.toString())
         }
         btnMisRecetas.setOnClickListener {
             setToggleSelected(false)
-            mostrarMisRecetas()
-        }
+            mostrarSoloMisRecetas = true
+            aplicarFiltros(etBuscarRecetas.text.toString())
     }
+    etBuscarRecetas.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            aplicarFiltros(s?.toString())
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    })
+}
 
     private fun loadUserName() {
         val userId = auth.currentUser?.uid
@@ -100,10 +122,16 @@ class HomeFragment : Fragment() {
         )
 
         categoriasAdapter = CategoriaAdapter(categorias) { categoria ->
-            filtrarPorCategoria(categoria.nombre)
+            if (filtroCategoria == categoria.nombre) {
+                filtroCategoria = null // Quita filtro si se vuelve a tocar (toggle)
+            } else {
+                filtroCategoria = categoria.nombre
+            }
+            aplicarFiltros(etBuscarRecetas.text.toString())
         }
         categoriasRecycler.adapter = categoriasAdapter
     }
+
 
     private fun setToggleSelected(TodasSelected: Boolean) {
         if (TodasSelected) {
@@ -119,97 +147,74 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun mostrarTodasRecetas() {
 
-    }
-    private fun mostrarMisRecetas() {
-
-    }
     private fun setupComidasRecycler(view: View) {
         comidasRecycler = view.findViewById(R.id.itemComidas_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        // Inicializa la lista con comidas por defecto
-        val comidasList = mutableListOf<Comida>(
 
-            Comida("Ramen AKai", "Asiática", "Saludable", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.ramen, true),
-            Comida("Sopa Miso", "Asiática", "Asia", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.miso, false),
-            Comida("Chilaquiles", "Mexicana", "Desayuno", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.chilaquiles, false),
-            Comida("Pad Thai", "Asiática", "Asia", "holi","papa,zana","123",true,"20","23","kimi@",R.drawable.pad_thai, false),
-            Comida("Pancakes", "Americana", "Desayuno","holi","papa,zana","123",true,"20","23","kimi@", R.drawable.pancakes, true)
-        )
+        comidasAdapter = ComidasAdapter(comidasFiltradas) { comida, isFavorite ->
+            comida.isFavorite = isFavorite
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                //checar aqui
+                database.getReference("favoritasUsuarios")
+                    .child(userId).child("favorites")
+                    .child(comida.nombre)
+                    .setValue(isFavorite)
+            }
+        }
+        comidasRecycler.adapter = comidasAdapter
+    }
 
-        // Cargar las recetas desde Firebase
+
+
+    private fun cargarTodasLasRecetas() {
         val recetasRef = database.reference.child("recetas")
 
         recetasRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val comidasFirebase = mutableListOf<Comida>()
-
-                // Agregar las recetas cargadas desde Firebase
+                todasComidas.clear()
                 for (recetaSnapshot in snapshot.children) {
                     val receta = recetaSnapshot.getValue(Comida::class.java)
-                    receta?.let {
-                        comidasFirebase.add(it)
-                    }
+                    receta?.let { todasComidas.add(it) }
                 }
-
-                // Agregar las comidas por defecto + las cargadas desde Firebase
-                val allComidas = comidasList + comidasFirebase
-
-                // Actualizar el adaptador con la lista combinada
-                comidasAdapter = ComidasAdapter(allComidas) { comida, isFavorite ->
-                    comida.isFavorite = isFavorite
-                    val userId = auth.currentUser?.uid
-                    if (userId != null) {
-                        database.getReference("favoritasUsuarios")
-                            .child(userId).child("favorites")
-                            .child(comida.nombre)
-                            .setValue(isFavorite)
-                    }
-                }
-
-                comidasRecycler.adapter = comidasAdapter
+                aplicarFiltros(etBuscarRecetas.text.toString())
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Manejar errores aquí
                 Log.e("Firebase", "Error al cargar recetas: ${error.message}")
             }
         })
-
-
     }
 
+    private fun aplicarFiltros(query: String? = null) {
+        val userId = auth.currentUser?.uid
 
-    private fun loadFavoriteComidas() {
-        val userId = auth.currentUser?.uid ?: return
-        database.getReference("favoritas").child(userId).child("favorites")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (comidaSnapshot in snapshot.children) {
-                        val comidaName = comidaSnapshot.key
-                        val isFavorite = comidaSnapshot.getValue(Boolean::class.java) ?: false
+        var lista = todasComidas.toList()
 
-                        val index = comidasList.indexOfFirst { it.nombre == comidaName }
-                        if (index != -1) {
-                            comidasList[index].isFavorite = isFavorite
-                        }
-                    }
-                    comidasAdapter.notifyDataSetChanged()
-                }
-                override fun onCancelled(error: DatabaseError) { }
-            })
-    }
-
-    private fun filtrarPorCategoria(categoria: String) {
-        // Implementar filtro real aquí.
-        // Por ejemplo:
-        val comidasFiltradas = comidasList.filter { it.categoria == categoria }
-        comidasAdapter = ComidasAdapter(comidasFiltradas) { comida, isFavorite ->
-            // actualizar favorito como antes
+        // Filtra solo mis recetas si corresponde
+        if (mostrarSoloMisRecetas && userId != null) {
+            lista = lista.filter { it.usuarioId == userId }
         }
-        comidasRecycler.adapter = comidasAdapter
+
+        // Filtra por categoría si corresponde
+        filtroCategoria?.let { cat ->
+            lista = lista.filter { it.categoria == cat }
+        }
+
+        // Filtro de texto/búsqueda (nombre, categoría, o cualquier etiqueta)
+        if (!query.isNullOrBlank()) {
+            val qLower = query.lowercase()
+            lista = lista.filter { comida ->
+                comida.nombre.lowercase().contains(qLower) ||
+                        comida.categoria.lowercase().contains(qLower) ||
+                        (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
+            }
+        }
+
+        comidasFiltradas.clear()
+        comidasFiltradas.addAll(lista)
+        comidasAdapter.notifyDataSetChanged()
     }
 }
 
@@ -236,12 +241,26 @@ class ComidasAdapter(
         return ComidaViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ComidasAdapter.ComidaViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ComidaViewHolder, position: Int) {
         val comida = comidas[position]
         holder.nombre.text = comida.nombre
         holder.categoria.text = comida.categoria
-        holder.etiqueta.text = comida.etiqueta
-        holder.imagen.setImageResource(comida.imagenRes)
+        // Mostrar etiquetas (join a una sola línea)
+        holder.etiqueta.text = comida.etiquetas?.joinToString(", ") ?: ""
+
+        Log.d("DEBUG_CATEG", "nombre=${comida.nombre} categoria=${comida.categoria}")
+        holder.categoria.text = comida.categoria
+
+        // Mostrar imagen desde URL o placeholder local si está vacío
+        if (comida.imagenUrl.isNotBlank()) {
+            Glide.with(holder.imagen.context)
+                .load(comida.imagenUrl)
+                .placeholder(R.drawable.placeholder) // Coloca tu recurso placeholder aquí
+                .into(holder.imagen)
+        } else {
+            holder.imagen.setImageResource(R.drawable.placeholder)
+        }
+
 
         // Actualizar icono de favorito
         updateFavoriteIcon(holder.iconFavorito, comida.isFavorite)
@@ -262,8 +281,10 @@ class ComidasAdapter(
     private fun updateFavoriteIcon(icon: ImageView, isFavorite: Boolean) {
         if (isFavorite) {
             icon.setImageResource(R.drawable.ic_heart_filled)
+
         } else {
-            icon.setImageResource(R.drawable.ic_heart_outline)
+            icon.setImageResource(R.drawable.ic_corazon)
+
         }
     }
 
