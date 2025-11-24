@@ -1,10 +1,13 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.Favoritas
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,6 +31,11 @@ class FavoritasFragment : Fragment() {
 
     private val recetasFavoritas = mutableListOf<Comida>()
     private val favoritosIds = mutableSetOf<String>()
+    private lateinit var etBuscarRecetas: EditText
+    private var mostrarSoloMisRecetas = false
+    private val todasComidas = mutableListOf<Comida>()
+    private var filtroCategoria: String? = null
+    private var comidasFiltradas = mutableListOf<Comida>()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -42,7 +50,10 @@ class FavoritasFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+        etBuscarRecetas = view.findViewById(R.id.etBuscarRecetas)
 
+        btnTodas = view.findViewById(R.id.btnTodas)
+        btnMisRecetas = view.findViewById(R.id.btnPropias)
         comidasRecycler = view.findViewById(R.id.favoritos_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
         comidasAdapter = ComidasAdapter(recetasFavoritas) { comida, isFavorite ->
@@ -55,6 +66,23 @@ class FavoritasFragment : Fragment() {
         comidasRecycler.adapter = comidasAdapter
 
         cargarFavoritosDelUsuario()
+        btnTodas.setOnClickListener {
+            setToggleSelected(true)
+            mostrarSoloMisRecetas = false
+            aplicarFiltros(etBuscarRecetas.text.toString())
+        }
+        btnMisRecetas.setOnClickListener {
+            setToggleSelected(false)
+            mostrarSoloMisRecetas = true
+            aplicarFiltros(etBuscarRecetas.text.toString())
+        }
+        etBuscarRecetas.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                aplicarFiltros(s?.toString())
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
     private fun setToggleSelected(TodasSelected: Boolean) {
         if (TodasSelected) {
@@ -105,5 +133,35 @@ class FavoritasFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+    private fun aplicarFiltros(query: String? = null) {
+        val userId = auth.currentUser?.uid
+
+        var lista = todasComidas.toList()
+
+        // Filtra solo mis recetas si corresponde
+        if (mostrarSoloMisRecetas && userId != null) {
+            lista = lista.filter { it.usuarioId == userId }
+        }
+
+        // Filtra por categoría si corresponde
+        filtroCategoria?.let { cat ->
+            lista = lista.filter { it.categoria == cat }
+        }
+
+        // Filtro de texto/búsqueda (nombre, categoría, o cualquier etiqueta)
+        if (!query.isNullOrBlank()) {
+            val qLower = query.lowercase()
+            lista = lista.filter { comida ->
+                comida.nombre.lowercase().contains(qLower) ||
+                        comida.categoria.lowercase().contains(qLower) ||
+                        (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
+            }
+        }
+
+        comidasFiltradas.clear()
+        comidasFiltradas.addAll(lista)
+        comidasAdapter.notifyDataSetChanged()
     }
 }

@@ -49,6 +49,8 @@ class HomeFragment : Fragment() {
     private var comidasFiltradas = mutableListOf<Comida>()
     private var filtroCategoria: String? = null
     private var mostrarSoloMisRecetas = false
+    private var recetasListas = false
+    private var favoritosListos = false
 
 
     override fun onCreateView(
@@ -120,7 +122,8 @@ class HomeFragment : Fragment() {
                             favoritosIds.add(favSnapshot.key ?: "")
                         }
                     }
-                    cargarTodasLasRecetas()
+                    favoritosListos = true
+                    sincronizarRecetasYFavoritos()
                 }
                 override fun onCancelled(error: DatabaseError) {}
             })
@@ -189,7 +192,6 @@ class HomeFragment : Fragment() {
 
     private fun cargarTodasLasRecetas() {
         val recetasRef = database.reference.child("recetas")
-
         recetasRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 todasComidas.clear()
@@ -197,12 +199,22 @@ class HomeFragment : Fragment() {
                     val receta = recetaSnapshot.getValue(Comida::class.java)
                     receta?.let { todasComidas.add(it) }
                 }
-                aplicarFiltros(etBuscarRecetas.text.toString())
+                recetasListas = true
+                sincronizarRecetasYFavoritos()
             }
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Error al cargar recetas: ${error.message}")
             }
         })
+    }
+    private fun sincronizarRecetasYFavoritos() {
+        if (!recetasListas || !favoritosListos) return  // Espera a que ambos loads estén listos
+
+        // Marca los favoritos en las recetas
+        todasComidas.forEach { receta ->
+            receta.isFavorite = favoritosIds.contains(receta.id)
+        }
+        aplicarFiltros(etBuscarRecetas.text.toString())
     }
 
     private fun aplicarFiltros(query: String? = null) {
