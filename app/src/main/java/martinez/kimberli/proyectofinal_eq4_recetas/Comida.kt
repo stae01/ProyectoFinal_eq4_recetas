@@ -16,5 +16,6 @@ var isFavorite: Boolean=false,
 val link: String = "",
 val fechaCreacion: Long? = null,
 val id: String = "",
+
 )
 
