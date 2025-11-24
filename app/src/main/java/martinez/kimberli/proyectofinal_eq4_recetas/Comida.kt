@@ -12,6 +12,8 @@ var tiempo: String = "",
 var usuarioId: String = "",
 var usuarioEmail: String = "",
 val imagenRes: Int,
-var isFavorite: Boolean
+var isFavorite: Boolean,
+    var imagenUrl: String = "",
+var etiquetas: List<String> = listOf()
 )
 
