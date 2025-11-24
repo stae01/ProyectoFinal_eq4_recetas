@@ -149,7 +149,7 @@
             />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipPostres"
+                android:id="@+id/chipPlatosPrincipales"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="Platos principales"
                 android:layout_width="wrap_content"
@@ -161,7 +161,7 @@
 
                 />
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipAmericana"
+                android:id="@+id/chipAperitivosyEntrantes"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="Aperitivos y entrantes"
                 android:layout_width="wrap_content"
@@ -173,7 +173,7 @@
 
                 />
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipMediterranea"
+                android:id="@+id/chipSopasyCremas"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="Sopas y cremas"
                 android:layout_width="wrap_content"
@@ -186,7 +186,7 @@
 
                 />
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipAsiatica"
+                android:id="@+id/chipGuarniciones"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="Guarniciones"
                 android:layout_width="wrap_content"
@@ -198,7 +198,7 @@
 
                 />
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipMexicana"
+            android:id="@+id/chipPostres"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:text="Postres"
             android:layout_width="wrap_content"

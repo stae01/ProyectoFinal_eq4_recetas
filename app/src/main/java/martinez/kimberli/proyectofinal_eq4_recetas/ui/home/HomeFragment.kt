@@ -43,6 +43,8 @@ class HomeFragment : Fragment() {
     private lateinit var btnTodas: Button
     private lateinit var btnMisRecetas: Button
 
+    private val favoritosIds = mutableSetOf<String>()
+
     private val todasComidas = mutableListOf<Comida>()
     private var comidasFiltradas = mutableListOf<Comida>()
     private var filtroCategoria: String? = null
@@ -68,6 +70,7 @@ class HomeFragment : Fragment() {
         loadUserName()
         setupCategoriasRecycler(view)
         setupComidasRecycler(view)
+        cargarFavoritosDelUsuario()
         cargarTodasLasRecetas()
 
         btnTodas.setOnClickListener {
@@ -106,6 +109,22 @@ class HomeFragment : Fragment() {
             welcomeTextView.text = "Hola!"
         }
     }
+    private fun cargarFavoritosDelUsuario() {
+        val userId = auth.currentUser?.uid ?: return
+        database.reference.child("favoritasUsuarios").child(userId).child("favorites")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    favoritosIds.clear()
+                    for (favSnapshot in snapshot.children) {
+                        if (favSnapshot.getValue(Boolean::class.java) == true) {
+                            favoritosIds.add(favSnapshot.key ?: "")
+                        }
+                    }
+                    cargarTodasLasRecetas()
+                }
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
 
     private fun setupCategoriasRecycler(view: View) {
         categoriasRecycler = view.findViewById(R.id.categorias_recycler)
@@ -113,17 +132,17 @@ class HomeFragment : Fragment() {
             LinearLayoutManager.HORIZONTAL, false)
 
         val categorias = listOf(
-            Categoria("Desayuno", R.drawable.ic_desayuno),
-            Categoria("Asiática", R.drawable.ic_asiatica),
-            Categoria("Postres", R.drawable.ic_postres),
-            Categoria("Mexicana", R.drawable.ic_mexicana),
-            Categoria("Americana", R.drawable.ic_americana),
-            Categoria("Mediterranea", R.drawable.ic_mediterranea)
+            Categoria("Desayuno y brunch", R.drawable.ic_desayuno),
+            Categoria("Platos principales", R.drawable.tacos),
+            Categoria("Aperitivos y entrantes", R.drawable.ic_aperitivos),
+            Categoria("Sopas y cremas", R.drawable.ic_asiatica),
+            Categoria("Guarniciones", R.drawable.ic_guarnicion),
+            Categoria("Postres", R.drawable.ic_postres)
         )
 
         categoriasAdapter = CategoriaAdapter(categorias) { categoria ->
             if (filtroCategoria == categoria.nombre) {
-                filtroCategoria = null // Quita filtro si se vuelve a tocar (toggle)
+                filtroCategoria = null
             } else {
                 filtroCategoria = categoria.nombre
             }
@@ -157,10 +176,9 @@ class HomeFragment : Fragment() {
             comida.isFavorite = isFavorite
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                //checar aqui
                 database.getReference("favoritasUsuarios")
                     .child(userId).child("favorites")
-                    .child(comida.nombre)
+                    .child(comida.id)
                     .setValue(isFavorite)
             }
         }
