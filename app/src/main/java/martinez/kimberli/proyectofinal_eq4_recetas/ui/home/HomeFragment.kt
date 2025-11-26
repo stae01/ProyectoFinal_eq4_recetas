@@ -1,5 +1,6 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,6 +28,7 @@ import com.google.firebase.database.ValueEventListener
 import martinez.kimberli.proyectofinal_eq4_recetas.Categoria
 import martinez.kimberli.proyectofinal_eq4_recetas.CategoriaAdapter
 import martinez.kimberli.proyectofinal_eq4_recetas.Comida
+import martinez.kimberli.proyectofinal_eq4_recetas.DetalleRecetaActivity
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -208,7 +210,7 @@ class HomeFragment : Fragment() {
         })
     }
     private fun sincronizarRecetasYFavoritos() {
-        if (!recetasListas || !favoritosListos) return  // Espera a que ambos loads estén listos
+        if (!recetasListas || !favoritosListos) return
 
         // Marca los favoritos en las recetas
         todasComidas.forEach { receta ->
@@ -222,12 +224,12 @@ class HomeFragment : Fragment() {
 
         var lista = todasComidas.toList()
 
-        // Filtra solo mis recetas si corresponde
+        // Filtra solo mis recetas
         if (mostrarSoloMisRecetas && userId != null) {
             lista = lista.filter { it.usuarioId == userId }
         }
 
-        // Filtra por categoría si corresponde
+        // Filtra por categoría
         filtroCategoria?.let { cat ->
             lista = lista.filter { it.categoria == cat }
         }
@@ -304,8 +306,10 @@ class ComidasAdapter(
 
         // Click en toda la card
         holder.cardView.setOnClickListener {
-            // Navegar a detalle de comida
-        }
+            val context = holder.itemView.context
+            val intent = Intent(context, DetalleRecetaActivity::class.java)
+            intent.putExtra("recetaId", comida.id)
+            context.startActivity(intent)        }
     }
 
     private fun updateFavoriteIcon(icon: ImageView, isFavorite: Boolean) {

@@ -140,12 +140,10 @@ class FavoritasFragment : Fragment() {
 
         var lista = todasComidas.toList()
 
-        // Filtra solo mis recetas si corresponde
         if (mostrarSoloMisRecetas && userId != null) {
             lista = lista.filter { it.usuarioId == userId }
         }
 
-        // Filtra por categoría si corresponde
         filtroCategoria?.let { cat ->
             lista = lista.filter { it.categoria == cat }
         }

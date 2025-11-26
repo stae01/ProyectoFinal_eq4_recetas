@@ -149,14 +149,13 @@
         android:backgroundTint="@color/cafe"
         android:text="Cerrar Sesión"
         android:textColor="@android:color/white"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGuardar"
-        app:layout_constraintVertical_bias="0.434"
-        app:backgroundTint="@null"
-        />
+        app:layout_constraintVertical_bias="0.16" />
 
     <TextView
         android:id="@+id/textView2"
