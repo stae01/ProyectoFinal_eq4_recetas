@@ -93,13 +93,13 @@ class DetalleRecetaActivity : AppCompatActivity() {
 
         favRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val isFavorita = snapshot.getValue(Boolean::class.java) == true
+                var isFavorita = snapshot.getValue(Boolean::class.java) == true
                 actualizarIconoFavorito(isFavorita)
 
                 binding.favoriteIcon.setOnClickListener {
-                    val nuevoValor = !isFavorita
-                    favRef.setValue(nuevoValor)
-                    actualizarIconoFavorito(nuevoValor)
+                    isFavorita= !isFavorita
+                    favRef.setValue(isFavorita)
+                    actualizarIconoFavorito(isFavorita)
                 }
             }
             override fun onCancelled(error: DatabaseError) {}
@@ -128,7 +128,7 @@ class DetalleRecetaActivity : AppCompatActivity() {
 
         // Editar abre pantalla de editar
         binding.btnEditar.setOnClickListener {
-            val intent = Intent(this, EditarRecetaActivity::class.java) // cambia al nombre real
+            val intent = Intent(this, EditarRecetaActivity::class.java)
             intent.putExtra("modo", "editar")
             intent.putExtra("recetaId", receta.id)
             startActivity(intent)

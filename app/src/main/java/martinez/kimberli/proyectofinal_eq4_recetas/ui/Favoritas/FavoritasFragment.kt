@@ -36,6 +36,9 @@ class FavoritasFragment : Fragment() {
     private val todasComidas = mutableListOf<Comida>()
     private var filtroCategoria: String? = null
     private var comidasFiltradas = mutableListOf<Comida>()
+    private val recetasBase = mutableListOf<Comida>()
+    private val recetasVisibles = mutableListOf<Comida>()
+
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -56,7 +59,8 @@ class FavoritasFragment : Fragment() {
         btnMisRecetas = view.findViewById(R.id.btnPropias)
         comidasRecycler = view.findViewById(R.id.favoritos_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
-        comidasAdapter = ComidasAdapter(recetasFavoritas) { comida, isFavorite ->
+        comidasAdapter = ComidasAdapter(recetasVisibles
+        ) { comida, isFavorite ->
             val userId = auth.currentUser?.uid ?: return@ComidasAdapter
             database.reference.child("favoritasUsuarios")
                 .child(userId).child("favorites")
@@ -120,15 +124,15 @@ class FavoritasFragment : Fragment() {
         val recetasRef = database.reference.child("recetas")
         recetasRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                recetasFavoritas.clear()
+                recetasBase.clear()
                 for (recetaSnapshot in snapshot.children) {
                     val receta = recetaSnapshot.getValue(Comida::class.java)
                     if (receta != null && favoritosIds.contains(receta.id)) {
                         receta.isFavorite = true
-                        recetasFavoritas.add(receta)
+                        recetasBase.add(receta)
                     }
                 }
-                comidasAdapter.notifyDataSetChanged()
+                aplicarFiltros(etBuscarRecetas.text.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -138,7 +142,7 @@ class FavoritasFragment : Fragment() {
     private fun aplicarFiltros(query: String? = null) {
         val userId = auth.currentUser?.uid
 
-        var lista = todasComidas.toList()
+        var lista: List<Comida> = recetasBase
 
         if (mostrarSoloMisRecetas && userId != null) {
             lista = lista.filter { it.usuarioId == userId }
@@ -158,8 +162,8 @@ class FavoritasFragment : Fragment() {
             }
         }
 
-        comidasFiltradas.clear()
-        comidasFiltradas.addAll(lista)
+        recetasVisibles.clear()
+        recetasVisibles.addAll(lista)
         comidasAdapter.notifyDataSetChanged()
     }
 }
