@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.ActivityDetalleRecetaBinding
-import martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas.EditarRecetaActivity
 
 class DetalleRecetaActivity : AppCompatActivity() {
 

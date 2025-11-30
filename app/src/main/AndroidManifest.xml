@@ -23,10 +23,9 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".registro.RegistroActivity" />
-        <activity
-            android:name=".DetalleRecetaActivity"
+        <activity android:name=".DetalleRecetaActivity"
             android:exported="false"/>
-        <activity android:name=".ui.crearRecetas.EditarRecetaActivity" />
+        <activity android:name=".EditarRecetaActivity" />
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

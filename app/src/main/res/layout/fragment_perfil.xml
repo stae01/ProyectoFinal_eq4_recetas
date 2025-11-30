@@ -101,7 +101,7 @@
         android:layout_height="55dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/ovalo"
-        android:enabled="false"
+        android:enabled="true"
         android:hint="Correo electrónico"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,32 +110,42 @@
         app:layout_constraintTop_toBottomOf="@id/etGenero" />
 
     <EditText
-        android:id="@+id/etCorreo2"
+        android:id="@+id/etContrasenaNueva"
         android:layout_width="348dp"
         android:layout_height="55dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/ovalo"
-        android:enabled="false"
-        android:hint="Contraseña"
-        android:inputType="textEmailAddress"
+        android:hint="Nueva Contraseña"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etGenero" />
+        app:layout_constraintTop_toBottomOf="@id/etCorreo" />
+
+    <EditText
+        android:id="@+id/etConfirmarContrasena"
+        android:layout_width="348dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/ovalo"
+        android:hint="Confirmar Contraseña"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etContrasenaNueva" />
 
     <Button
         android:id="@+id/btnGuardar"
         android:layout_width="220dp"
         android:layout_height="55dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/button_orange"
         android:backgroundTint="@color/orange"
-        android:text="Aceptar"
+        android:text="Guardar Cambios"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etCorreo2"
+        app:layout_constraintTop_toBottomOf="@+id/etConfirmarContrasena"
         app:backgroundTint="@null"
         />
 

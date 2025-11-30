@@ -9,7 +9,7 @@ data class Comida(
     val ingredientes: String? = null,
     val preparacion: String? = null,
     val pasos: String? = null, 
-    val tiempo: Any? = null,
+    val tiempo: String? = null,
     val categoria: String? = null,
     val etiquetas: List<String>? = null,
     val link: String? = null,
@@ -17,7 +17,7 @@ data class Comida(
     val usuarioId: String? = null,
     val publica: Boolean? = null,
     val usuarioEmail: String? = null,
-    val fechaCreacion: Any? = null
+    val fechaCreacion: Long? = null
 ) {
     @get:Exclude
     var isFavorite: Boolean = false

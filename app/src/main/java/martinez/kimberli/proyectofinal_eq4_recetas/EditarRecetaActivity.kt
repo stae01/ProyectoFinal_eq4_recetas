@@ -1,4 +1,4 @@
-package martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas
+package martinez.kimberli.proyectofinal_eq4_recetas
 
 import android.app.Activity
 import android.content.Intent
@@ -15,8 +15,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import martinez.kimberli.proyectofinal_eq4_recetas.Comida
-import martinez.kimberli.proyectofinal_eq4_recetas.R
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.ActivityEditarRecetaBinding
 import java.util.*
 
@@ -30,6 +28,9 @@ class EditarRecetaActivity : AppCompatActivity() {
     private var recetaKey: String? = null
     private var recetaOriginal: Comida? = null
     private var imagenUri: Uri? = null
+
+    private var selectedHours: Int = 0
+    private var selectedMinutes: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +53,32 @@ class EditarRecetaActivity : AppCompatActivity() {
         binding.btnGuardar.setOnClickListener { guardarReceta() }
         binding.btnEliminar.setOnClickListener { confirmarEliminacion() }
         binding.imgReceta.setOnClickListener { seleccionarImagen() }
+        binding.etTiempo.setOnClickListener { showTimePickerDialog() }
+    }
+
+    private fun showTimePickerDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_time_picker, null)
+        val hoursPicker = dialogView.findViewById<android.widget.NumberPicker>(R.id.picker_hours)
+        val minutesPicker = dialogView.findViewById<android.widget.NumberPicker>(R.id.picker_minutes)
+
+        hoursPicker.minValue = 0
+        hoursPicker.maxValue = 24
+        hoursPicker.value = selectedHours
+
+        minutesPicker.minValue = 0
+        minutesPicker.maxValue = 59
+        minutesPicker.value = selectedMinutes
+
+        AlertDialog.Builder(this)
+            .setTitle("Tiempo de preparación")
+            .setView(dialogView)
+            .setPositiveButton("Aceptar") { _, _ ->
+                selectedHours = hoursPicker.value
+                selectedMinutes = minutesPicker.value
+                binding.etTiempo.setText("$selectedHours h $selectedMinutes min")
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     private fun cargarDatosReceta() {
@@ -79,7 +106,20 @@ class EditarRecetaActivity : AppCompatActivity() {
         binding.etDescripcion.setText(receta.descripcion)
         binding.etIngredientes.setText(receta.ingredientes)
         binding.etPreparacion.setText(if (!receta.preparacion.isNullOrBlank()) receta.preparacion else receta.pasos)
-        binding.etTiempo.setText(receta.tiempo.toString())
+
+        // Parsear el tiempo
+        receta.tiempo?.let {
+            val parts = it.toString().split(" ")
+            if (parts.size >= 2 && parts.getOrNull(1) == "h") {
+                selectedHours = parts[0].toIntOrNull() ?: 0
+            }
+            if (parts.size >= 4 && parts.getOrNull(3) == "min") {
+                selectedMinutes = parts[2].toIntOrNull() ?: 0
+            }
+        }
+        binding.etTiempo.setText(receta.tiempo ?: "")
+
+
         binding.etCategoria.setText(receta.categoria)
         binding.etEtiquetas.setText(receta.etiquetas?.joinToString(", "))
         binding.etLink.setText(receta.link)
@@ -135,6 +175,12 @@ class EditarRecetaActivity : AppCompatActivity() {
             return
         }
 
+        val tiempo = if (selectedHours > 0 || selectedMinutes > 0) {
+            "$selectedHours h $selectedMinutes min"
+        } else {
+            binding.etTiempo.text.toString().trim()
+        }
+
         val etiquetasList = binding.etEtiquetas.text.toString().trim().split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
         val recetaActualizada = Comida(
@@ -143,7 +189,7 @@ class EditarRecetaActivity : AppCompatActivity() {
             descripcion = binding.etDescripcion.text.toString().trim(),
             ingredientes = binding.etIngredientes.text.toString().trim(),
             preparacion = binding.etPreparacion.text.toString().trim(),
-            tiempo = binding.etTiempo.text.toString().trim(),
+            tiempo = tiempo,
             categoria = binding.etCategoria.text.toString().trim(),
             etiquetas = etiquetasList,
             link = binding.etLink.text.toString().trim(),
