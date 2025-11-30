@@ -11,29 +11,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="20dp">
+
 
         <TextView
             android:id="@+id/tituloAgregar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Agregar Receta"
-            android:textSize="23sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"/>
 
         <ImageView
             android:id="@+id/ivReceta"
-            android:layout_width="199dp"
-            android:layout_height="120dp"
+            android:layout_width="220dp"
+            android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/borde_redondeado_gris"
             android:contentDescription="Foto de la receta"
-            android:src="@drawable/ic_upload" />
+            android:src="@drawable/ic_upload"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +46,8 @@
             android:layout_gravity="center_horizontal"
             android:text="Haz clic para subir foto"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"/>
 
 
         <TextView
@@ -55,30 +61,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="pasta carbonara"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="12dp"
+            android:padding="16dp"
+            android:background="@drawable/input_background"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tiempo de preparación:  "
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginBottom="6dp"/>
 
         <TextView
             android:id="@+id/tvTiempoPreparacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Seleccionar tiempo"
-            android:textSize="18sp"
-            android:padding="8dp"
+            android:hint="Seleccionar tiempo "
+            android:textSize="17sp"
+            android:padding="12dp"
             android:background="@drawable/input_background"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descrpción breve:  "
+            android:text="Descripción breve:  "
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginBottom="6dp"/>
 
         <EditText
             android:id="@+id/etDescripcionBreve"
@@ -86,23 +96,28 @@
             android:layout_height="wrap_content"
             android:hint="receta de fiedos con tocino"
             android:maxLines="3"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="12dp"
+            android:padding="9dp"
+            android:background="@drawable/input_background"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ingredientes:  "
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginBottom="6dp"/>
 
         <EditText
             android:id="@+id/etIngredientes"
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="12dp"
             android:gravity="top"
             android:hint="Ingredientes"
-            android:minLines="4" />
+            android:padding="16dp"
+            android:minLines="4"
+            android:background="@drawable/input_background"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,7 +133,9 @@
             android:layout_marginBottom="16dp"
             android:gravity="top"
             android:hint="Pasos de preparación"
-            android:minLines="4" />
+            android:minLines="4"
+            android:padding="16dp"
+            android:background="@drawable/input_background"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -133,7 +150,7 @@
             android:id="@+id/chipGroupCategorias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="16dp"
             app:chipSpacing="8dp"
             app:singleSelection="true">
 
@@ -141,7 +158,7 @@
             android:id="@+id/chipDesayuno"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:text="Desayuno y brunch"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:chipBackgroundColor="@color/chip_background_color_selector"
@@ -158,7 +175,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/chip_background_color_selector"
                 android:textColor="@color/chip_text_color_selector"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
 
                 />
@@ -171,7 +188,7 @@
                 app:chipBackgroundColor="@color/chip_background_color_selector"
                 android:textStyle="bold"
                 android:textColor="@color/chip_text_color_selector"
-                android:textSize="12sp"
+                android:textSize="14sp"
 
                 />
             <com.google.android.material.chip.Chip
@@ -182,7 +199,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/chip_background_color_selector"
                 android:textColor="@color/chip_text_color_selector"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
 
 
@@ -195,7 +212,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/chip_background_color_selector"
                 android:textColor="@color/chip_text_color_selector"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
 
                 />
@@ -207,7 +224,7 @@
             android:layout_height="wrap_content"
             app:chipBackgroundColor="@color/chip_background_color_selector"
             android:textColor="@color/chip_text_color_selector"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold"
 
             />
@@ -230,17 +247,18 @@
 
         <EditText
             android:id="@+id/etEtiqueta"
-            android:layout_width="199dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Agregar etiqueta"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone"
+            android:background="@drawable/input_background"
+            android:padding="12dp"/>
         <Button
             android:id="@+id/btnAgregarEtiqueta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/orange"
-
             android:text="+"
             app:backgroundTint="@null"/>
     </LinearLayout>
@@ -275,16 +293,19 @@
             android:id="@+id/switchCompartir"
             android:layout_width="344dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="Compartir  públicamente" />
+            android:layout_marginBottom="6dp"
+            android:text="Compartir  públicamente"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="18dp"
             android:text="otros usuarios podran ver esta receta"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <LinearLayout
         android:layout_width="match_parent"
@@ -295,12 +316,13 @@
 
             <Button
                 android:id="@+id/btnGuardar"
-                android:layout_width="180dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_amarillo"
                 android:text="Guardar"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                android:layout_marginRight="10dp"
                 app:backgroundTint="@null"
                 />
 
