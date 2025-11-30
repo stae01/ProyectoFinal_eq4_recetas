@@ -153,8 +153,8 @@ class FavoritasFragment : Fragment() {
         }
 
         // Filtro de texto/búsqueda (nombre, categoría, o cualquier etiqueta)
-        if (!query.isNullOrBlank()) {
-            val qLower = query.lowercase()
+        val qLower = query?.trim()?.lowercase().orEmpty()
+        if (qLower.isNotEmpty()) {
             lista = lista.filter { comida ->
                 comida.nombre.lowercase().contains(qLower) ||
                         comida.categoria.lowercase().contains(qLower) ||
