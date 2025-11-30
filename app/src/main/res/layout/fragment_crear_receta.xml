@@ -63,12 +63,14 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/etTiempoPreparacion"
+        <TextView
+            android:id="@+id/tvTiempoPreparacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ej: 30 minutos"
-            android:inputType="number"
+            android:hint="Seleccionar tiempo"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:background="@drawable/input_background"
             android:layout_marginBottom="6dp" />
 
         <TextView
@@ -142,8 +144,8 @@
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/black"
+            app:chipBackgroundColor="@color/chip_background_color_selector"
+            android:textColor="@color/chip_text_color_selector"
             android:textStyle="bold"
 
             />
@@ -154,8 +156,8 @@
                 android:text="Platos principales"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/orange"
-                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_color_selector"
+                android:textColor="@color/chip_text_color_selector"
                 android:textSize="12sp"
                 android:textStyle="bold"
 
@@ -166,9 +168,9 @@
                 android:text="Aperitivos y entrantes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/orange"
+                app:chipBackgroundColor="@color/chip_background_color_selector"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="@color/chip_text_color_selector"
                 android:textSize="12sp"
 
                 />
@@ -178,8 +180,8 @@
                 android:text="Sopas y cremas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/orange"
-                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_color_selector"
+                android:textColor="@color/chip_text_color_selector"
                 android:textSize="12sp"
                 android:textStyle="bold"
 
@@ -191,8 +193,8 @@
                 android:text="Guarniciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/orange"
-                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_color_selector"
+                android:textColor="@color/chip_text_color_selector"
                 android:textSize="12sp"
                 android:textStyle="bold"
 
@@ -203,8 +205,8 @@
             android:text="Postres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/black"
+            app:chipBackgroundColor="@color/chip_background_color_selector"
+            android:textColor="@color/chip_text_color_selector"
             android:textSize="12sp"
             android:textStyle="bold"
 

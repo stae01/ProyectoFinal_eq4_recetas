@@ -15,6 +15,9 @@ import martinez.kimberli.proyectofinal_eq4_recetas.ImageCloudinary
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentCrearRecetaBinding
 import java.util.UUID
 
+import martinez.kimberli.proyectofinal_eq4_recetas.R
+import androidx.appcompat.app.AlertDialog
+
 class crearRecetasFragment : Fragment() {
 
     private var _binding: FragmentCrearRecetaBinding? = null
@@ -48,10 +51,17 @@ class crearRecetasFragment : Fragment() {
         return binding.root
     }
 
+    private var selectedHours: Int = 0
+    private var selectedMinutes: Int = 0
+
     private fun setupUI() {
         // Subir imagen
         binding.ivReceta.setOnClickListener {
             pickImageLauncher.launch("image/*")
+        }
+
+        binding.tvTiempoPreparacion.setOnClickListener {
+            showTimePickerDialog()
         }
 
         // Agregar etiquetas
@@ -78,9 +88,38 @@ class crearRecetasFragment : Fragment() {
         }
     }
 
+    private fun showTimePickerDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_time_picker, null)
+        val hoursPicker = dialogView.findViewById<android.widget.NumberPicker>(R.id.picker_hours)
+        val minutesPicker = dialogView.findViewById<android.widget.NumberPicker>(R.id.picker_minutes)
+
+        hoursPicker.minValue = 0
+        hoursPicker.maxValue = 24
+        hoursPicker.value = selectedHours
+
+        minutesPicker.minValue = 0
+        minutesPicker.maxValue = 59
+        minutesPicker.value = selectedMinutes
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Tiempo de preparación")
+            .setView(dialogView)
+            .setPositiveButton("Aceptar") { _, _ ->
+                selectedHours = hoursPicker.value
+                selectedMinutes = minutesPicker.value
+                binding.tvTiempoPreparacion.text = "$selectedHours h $selectedMinutes min"
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
     private fun guardarReceta() {
         val nombre = binding.etNombreReceta.text.toString().trim()
-        val tiempo = binding.etTiempoPreparacion.text.toString().trim()
+        val tiempo = if (selectedHours > 0 || selectedMinutes > 0) {
+            "$selectedHours h $selectedMinutes min"
+        } else {
+            null
+        }
         val descripcion = binding.etDescripcionBreve.text.toString().trim()
         val ingredientes = binding.etIngredientes.text.toString().trim()
         val pasos = binding.etPasosPreparacion.text.toString().trim()
@@ -102,7 +141,7 @@ class crearRecetasFragment : Fragment() {
         } else null
 
         // Validación de datos obligatorios
-        if (nombre.isEmpty() || descripcion.isEmpty() || categoriaSeleccionada == null) {
+        if (nombre.isEmpty() || descripcion.isEmpty() || categoriaSeleccionada == null || tiempo.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Faltan campos obligatorios", Toast.LENGTH_SHORT).show()
             return
         }

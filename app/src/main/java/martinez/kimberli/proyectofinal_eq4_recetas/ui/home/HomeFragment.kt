@@ -144,11 +144,7 @@ class HomeFragment : Fragment() {
         )
 
         categoriasAdapter = CategoriaAdapter(categorias) { categoria ->
-            if (filtroCategoria == categoria.nombre) {
-                filtroCategoria = null
-            } else {
-                filtroCategoria = categoria.nombre
-            }
+            filtroCategoria = categoria?.nombre
             aplicarFiltros(etBuscarRecetas.text.toString())
         }
         categoriasRecycler.adapter = categoriasAdapter
