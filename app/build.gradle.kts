@@ -52,7 +52,6 @@ dependencies {
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.google.firebase:firebase-database:22.0.1")

@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import martinez.kimberli.proyectofinal_eq4_recetas.R
-import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,7 +28,6 @@ import martinez.kimberli.proyectofinal_eq4_recetas.Categoria
 import martinez.kimberli.proyectofinal_eq4_recetas.CategoriaAdapter
 import martinez.kimberli.proyectofinal_eq4_recetas.Comida
 import martinez.kimberli.proyectofinal_eq4_recetas.DetalleRecetaActivity
-import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -121,7 +119,7 @@ class HomeFragment : Fragment() {
                     favoritosIds.clear()
                     for (favSnapshot in snapshot.children) {
                         if (favSnapshot.getValue(Boolean::class.java) == true) {
-                            favoritosIds.add(favSnapshot.key ?: "")
+                            favSnapshot.key?.let { favoritosIds.add(it) }
                         }
                     }
                     favoritosListos = true
@@ -157,8 +155,8 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun setToggleSelected(TodasSelected: Boolean) {
-        if (TodasSelected) {
+    private fun setToggleSelected(todasSelected: Boolean) {
+        if (todasSelected) {
             btnTodas.setBackgroundResource(R.drawable.toggle_seleccionado_bg)
             btnTodas.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnMisRecetas.setBackgroundResource(R.drawable.toggle_noseleccionado_bg)
@@ -181,10 +179,12 @@ class HomeFragment : Fragment() {
             comida.isFavorite = isFavorite
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                database.getReference("favoritasUsuarios")
-                    .child(userId).child("favorites")
-                    .child(comida.id)
-                    .setValue(isFavorite)
+                comida.id?.let {
+                    database.getReference("favoritasUsuarios")
+                        .child(userId).child("favorites")
+                        .child(it)
+                        .setValue(isFavorite)
+                }
             }
         }
         comidasRecycler.adapter = comidasAdapter
@@ -199,7 +199,10 @@ class HomeFragment : Fragment() {
                 todasComidas.clear()
                 for (recetaSnapshot in snapshot.children) {
                     val receta = recetaSnapshot.getValue(Comida::class.java)
-                    receta?.let { todasComidas.add(it) }
+                    receta?.let {
+                        it.id = recetaSnapshot.key
+                        todasComidas.add(it)
+                    }
                 }
                 recetasListas = true
                 sincronizarRecetasYFavoritos()
@@ -212,7 +215,6 @@ class HomeFragment : Fragment() {
     private fun sincronizarRecetasYFavoritos() {
         if (!recetasListas || !favoritosListos) return
 
-        // Marca los favoritos en las recetas
         todasComidas.forEach { receta ->
             receta.isFavorite = favoritosIds.contains(receta.id)
         }
@@ -224,23 +226,20 @@ class HomeFragment : Fragment() {
 
         var lista = todasComidas.toList()
 
-        // Filtra solo mis recetas
         if (mostrarSoloMisRecetas && userId != null) {
             lista = lista.filter { it.usuarioId == userId }
         }
 
-        // Filtra por categoría
         filtroCategoria?.let { cat ->
             lista = lista.filter { it.categoria == cat }
         }
 
-        // Filtro de texto/búsqueda (nombre, categoría, o cualquier etiqueta)
         if (!query.isNullOrBlank()) {
             val qLower = query.lowercase()
             lista = lista.filter { comida ->
-                comida.nombre.lowercase().contains(qLower) ||
-                        comida.categoria.lowercase().contains(qLower) ||
-                        (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
+                (comida.nombre?.lowercase()?.contains(qLower) ?: false) ||
+                (comida.categoria?.lowercase()?.contains(qLower) ?: false) ||
+                (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
             }
         }
 
@@ -277,53 +276,40 @@ class ComidasAdapter(
         val comida = comidas[position]
         holder.nombre.text = comida.nombre
         holder.categoria.text = comida.categoria
-        // Mostrar etiquetas (join a una sola línea)
         holder.etiqueta.text = comida.etiquetas?.joinToString(", ") ?: ""
 
-        Log.d("DEBUG_CATEG", "nombre=${comida.nombre} categoria=${comida.categoria}")
-        holder.categoria.text = comida.categoria
-
-        // Mostrar imagen desde URL o placeholder local si está vacío
-        if (comida.imagenUrl.isNotBlank()) {
+        if (!comida.imagenUrl.isNullOrBlank()) {
             Glide.with(holder.imagen.context)
                 .load(comida.imagenUrl)
-                .placeholder(R.drawable.placeholder) // Coloca tu recurso placeholder aquí
+                .placeholder(R.drawable.placeholder)
                 .into(holder.imagen)
         } else {
             holder.imagen.setImageResource(R.drawable.placeholder)
         }
 
-
-        // Actualizar icono de favorito
         updateFavoriteIcon(holder.iconFavorito, comida.isFavorite)
 
-        // Click en favorito
         holder.iconFavorito.setOnClickListener {
             comida.isFavorite = !comida.isFavorite
             updateFavoriteIcon(holder.iconFavorito, comida.isFavorite)
             onFavoriteClick(comida, comida.isFavorite)
         }
 
-        // Click en toda la card
         holder.cardView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, DetalleRecetaActivity::class.java)
-            intent.putExtra("recetaId", comida.id)
-            context.startActivity(intent)        }
+            intent.putExtra("recetaKey", comida.id)
+            context.startActivity(intent)
+        }
     }
 
     private fun updateFavoriteIcon(icon: ImageView, isFavorite: Boolean) {
         if (isFavorite) {
             icon.setImageResource(R.drawable.ic_heart_filled)
-
         } else {
             icon.setImageResource(R.drawable.ic_corazon)
-
         }
     }
 
     override fun getItemCount() = comidas.size
 }
-
-
-

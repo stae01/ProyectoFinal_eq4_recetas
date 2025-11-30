@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import martinez.kimberli.proyectofinal_eq4_recetas.Comida
 import martinez.kimberli.proyectofinal_eq4_recetas.R
-import martinez.kimberli.proyectofinal_eq4_recetas.databinding.FragmentFavoritasBinding
 import martinez.kimberli.proyectofinal_eq4_recetas.ui.home.ComidasAdapter
 
 class FavoritasFragment : Fragment() {
@@ -29,16 +26,12 @@ class FavoritasFragment : Fragment() {
     private lateinit var comidasRecycler: RecyclerView
     private lateinit var comidasAdapter: ComidasAdapter
 
-    private val recetasFavoritas = mutableListOf<Comida>()
+    private val recetasBase = mutableListOf<Comida>()
+    private val recetasVisibles = mutableListOf<Comida>()
     private val favoritosIds = mutableSetOf<String>()
     private lateinit var etBuscarRecetas: EditText
     private var mostrarSoloMisRecetas = false
-    private val todasComidas = mutableListOf<Comida>()
     private var filtroCategoria: String? = null
-    private var comidasFiltradas = mutableListOf<Comida>()
-    private val recetasBase = mutableListOf<Comida>()
-    private val recetasVisibles = mutableListOf<Comida>()
-
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -59,13 +52,14 @@ class FavoritasFragment : Fragment() {
         btnMisRecetas = view.findViewById(R.id.btnPropias)
         comidasRecycler = view.findViewById(R.id.favoritos_recycler)
         comidasRecycler.layoutManager = LinearLayoutManager(requireContext())
-        comidasAdapter = ComidasAdapter(recetasVisibles
-        ) { comida, isFavorite ->
+        comidasAdapter = ComidasAdapter(recetasVisibles) { comida, isFavorite ->
             val userId = auth.currentUser?.uid ?: return@ComidasAdapter
-            database.reference.child("favoritasUsuarios")
-                .child(userId).child("favorites")
-                .child(comida.id)
-                .setValue(isFavorite)
+            comida.id?.let {
+                database.reference.child("favoritasUsuarios")
+                    .child(userId).child("favorites")
+                    .child(it)
+                    .setValue(isFavorite)
+            }
         }
         comidasRecycler.adapter = comidasAdapter
 
@@ -88,8 +82,8 @@ class FavoritasFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
-    private fun setToggleSelected(TodasSelected: Boolean) {
-        if (TodasSelected) {
+    private fun setToggleSelected(todasSelected: Boolean) {
+        if (todasSelected) {
             btnTodas.setBackgroundResource(R.drawable.toggle_seleccionado_bg)
             btnTodas.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnMisRecetas.setBackgroundResource(R.drawable.toggle_noseleccionado_bg)
@@ -110,7 +104,7 @@ class FavoritasFragment : Fragment() {
                     favoritosIds.clear()
                     for (favSnapshot in snapshot.children) {
                         if (favSnapshot.getValue(Boolean::class.java) == true) {
-                            favoritosIds.add(favSnapshot.key ?: "")
+                            favSnapshot.key?.let { favoritosIds.add(it) }
                         }
                     }
                     cargarDatosRecetasFavoritas()
@@ -127,9 +121,12 @@ class FavoritasFragment : Fragment() {
                 recetasBase.clear()
                 for (recetaSnapshot in snapshot.children) {
                     val receta = recetaSnapshot.getValue(Comida::class.java)
-                    if (receta != null && favoritosIds.contains(receta.id)) {
-                        receta.isFavorite = true
-                        recetasBase.add(receta)
+                    if (receta != null) {
+                        receta.id = recetaSnapshot.key
+                        if (favoritosIds.contains(receta.id)) {
+                            receta.isFavorite = true
+                            recetasBase.add(receta)
+                        }
                     }
                 }
                 aplicarFiltros(etBuscarRecetas.text.toString())
@@ -152,13 +149,12 @@ class FavoritasFragment : Fragment() {
             lista = lista.filter { it.categoria == cat }
         }
 
-        // Filtro de texto/búsqueda (nombre, categoría, o cualquier etiqueta)
-        val qLower = query?.trim()?.lowercase().orEmpty()
-        if (qLower.isNotEmpty()) {
+        val qLower = query?.trim()?.lowercase()
+        if (!qLower.isNullOrEmpty()) {
             lista = lista.filter { comida ->
-                comida.nombre.lowercase().contains(qLower) ||
-                        comida.categoria.lowercase().contains(qLower) ||
-                        (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
+                (comida.nombre?.lowercase()?.contains(qLower) == true) ||
+                (comida.categoria?.lowercase()?.contains(qLower) == true) ||
+                (comida.etiquetas?.any { it.lowercase().contains(qLower) } == true)
             }
         }
 

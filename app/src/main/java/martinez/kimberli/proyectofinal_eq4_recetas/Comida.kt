@@ -1,21 +1,25 @@
 package martinez.kimberli.proyectofinal_eq4_recetas
 
+import com.google.firebase.database.Exclude
+
 data class Comida(
-val nombre: String ="",
-val categoria: String="",
-var etiquetas: List<String>? = null,
-var descripcion: String = "",
-var ingredientes: String = "",
-var pasos: String = "",
-var publica: Boolean = false,
-var tiempo: String = "",
-var usuarioId: String = "",
-var usuarioEmail: String = "",
-val imagenUrl: String = "",
-var isFavorite: Boolean=false,
-val link: String = "",
-val fechaCreacion: Long? = null,
-val id: String = "",
-
-)
-
+    var id: String? = null,
+    val nombre: String? = null,
+    val descripcion: String? = null,
+    val ingredientes: String? = null,
+    val preparacion: String? = null,
+    val pasos: String? = null, 
+    val tiempo: Any? = null,
+    val categoria: String? = null,
+    val etiquetas: List<String>? = null,
+    val link: String? = null,
+    var imagenUrl: String? = null,
+    val usuarioId: String? = null,
+    val publica: Boolean? = null,
+    val usuarioEmail: String? = null,
+    val fechaCreacion: Any? = null
+) {
+    @get:Exclude
+    var isFavorite: Boolean = false
+    constructor() : this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+}

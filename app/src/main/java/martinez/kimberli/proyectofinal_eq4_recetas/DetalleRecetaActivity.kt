@@ -6,14 +6,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import martinez.kimberli.proyectofinal_eq4_recetas.databinding.ActivityDetalleRecetaBinding
-
+import martinez.kimberli.proyectofinal_eq4_recetas.ui.crearRecetas.EditarRecetaActivity
 
 class DetalleRecetaActivity : AppCompatActivity() {
 
@@ -21,53 +20,69 @@ class DetalleRecetaActivity : AppCompatActivity() {
     private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    private var recetaKey: String? = null
+    private var isFavoritaActual = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalleRecetaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val recetaId = intent.getStringExtra("recetaId") ?: return
+        recetaKey = intent.getStringExtra("recetaKey")
+        if (recetaKey == null) {
+            Toast.makeText(this, "Error: No se proporcionó la receta.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         binding.btnBack.setOnClickListener {
             finish()
         }
 
-        cargarRecetaDeFirebase(recetaId)
+        recetaKey?.let { cargarRecetaDeFirebase(it) }
     }
 
-    private fun cargarRecetaDeFirebase(recetaId: String) {
-        val recetasRef = FirebaseDatabase.getInstance().getReference("recetas")
-        recetasRef.orderByChild("id").equalTo(recetaId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (snap in snapshot.children) {
-                        val receta = snap.getValue(Comida::class.java)
-                        if (receta != null) {
-                            receta.id
-                            mostrarReceta(receta)
-                            manejarAccionesPropias(receta, snap.key ?: "")
-                        }
-                    }
+    private fun cargarRecetaDeFirebase(recetaKey: String) {
+        val recetaRef = database.getReference("recetas").child(recetaKey)
+        recetaRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    Toast.makeText(applicationContext, "Receta no encontrada", Toast.LENGTH_SHORT).show()
+                    finish()
+                    return
                 }
+                val receta = snapshot.getValue(Comida::class.java)
+                if (receta != null) {
+                    receta.id = snapshot.key
+                    mostrarReceta(receta)
+                    manejarAccionesPropias(receta, snapshot.key!!)
+                } else {
+                    Toast.makeText(applicationContext, "Error al leer la receta", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun mostrarReceta(receta: Comida) {
         binding.tvNombreReceta.text = receta.nombre
         binding.tvDescripcion.text = receta.descripcion
         binding.tvIngredientes.text = receta.ingredientes
-        binding.tvPreparacion.text = receta.pasos
-        binding.tvTiempo.text =
-            if (!receta.tiempo.isNullOrBlank()) "⏱ Tiempo: ${receta.tiempo}" else "⏱ Tiempo: No especificado"
+        binding.tvPreparacion.text = if (!receta.preparacion.isNullOrBlank()) receta.preparacion else receta.pasos
+        
+        val tiempoStr = receta.tiempo?.toString() ?: ""
+        binding.tvTiempo.text = if (tiempoStr.isNotBlank()) "⏱ Tiempo: $tiempoStr" else "⏱ Tiempo: No especificado"
 
         binding.tvCategoria.text =
             if (!receta.categoria.isNullOrBlank()) "Categoría: ${receta.categoria}" else "Categoría: -"
 
         binding.tvEtiquetas.text =
             if (!receta.etiquetas.isNullOrEmpty()) {
-                "Etiquetas: ${receta.etiquetas!!.joinToString(", ")}"
+                "Etiquetas: ${receta.etiquetas.joinToString(", ")}"
             } else {
                 "Etiquetas: -"
             }
@@ -78,43 +93,42 @@ class DetalleRecetaActivity : AppCompatActivity() {
         Glide.with(this)
             .load(receta.imagenUrl)
             .placeholder(R.drawable.placeholder)
+            .error(android.R.drawable.ic_dialog_alert)
             .into(binding.imgReceta)
 
-        manejarFavorito(receta)
-
+        auth.currentUser?.let { user ->
+            receta.id?.let { recetaId ->
+                configurarListenerFavorito(user, recetaId)
+            }
+        }
     }
-    private fun manejarFavorito(receta: Comida) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val favRef = FirebaseDatabase.getInstance()
-            .getReference("favoritasUsuarios")
-            .child(userId)
-            .child("favorites")
-            .child(receta.id)
+
+    private fun configurarListenerFavorito(user: FirebaseUser, recetaId: String) {
+        val favRef = database.getReference("favoritasUsuarios").child(user.uid).child("favorites").child(recetaId)
 
         favRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var isFavorita = snapshot.getValue(Boolean::class.java) == true
-                actualizarIconoFavorito(isFavorita)
-
-                binding.favoriteIcon.setOnClickListener {
-                    isFavorita= !isFavorita
-                    favRef.setValue(isFavorita)
-                    actualizarIconoFavorito(isFavorita)
-                }
+                isFavoritaActual = snapshot.getValue(Boolean::class.java) == true
+                actualizarIconoFavorito(isFavoritaActual)
             }
             override fun onCancelled(error: DatabaseError) {}
         })
+
+        binding.favoriteIcon.setOnClickListener {
+            isFavoritaActual = !isFavoritaActual
+            favRef.setValue(isFavoritaActual)
+            actualizarIconoFavorito(isFavoritaActual)
+        }
     }
 
     private fun actualizarIconoFavorito(isFavorita: Boolean) {
-        binding.favoriteIcon.setImageResource(
-            if (isFavorita) R.drawable.ic_heart_filled else R.drawable.ic_corazon
-        )
+        val icon = if (isFavorita) R.drawable.ic_heart_filled else R.drawable.ic_corazon
+        binding.favoriteIcon.setImageResource(icon)
+        binding.favoriteIcon.imageTintList = ContextCompat.getColorStateList(this, R.color.orange)
     }
-    // ver icono editar/eliminar si la receta es propia
+
     private fun manejarAccionesPropias(receta: Comida, recetaKey: String) {
         val currentUserId = auth.currentUser?.uid
-
         val esPropia = !receta.usuarioId.isNullOrBlank() && receta.usuarioId == currentUserId
 
         if (esPropia) {
@@ -126,22 +140,17 @@ class DetalleRecetaActivity : AppCompatActivity() {
             return
         }
 
-        // Editar abre pantalla de editar
         binding.btnEditar.setOnClickListener {
             val intent = Intent(this, EditarRecetaActivity::class.java)
-            intent.putExtra("modo", "editar")
-            intent.putExtra("recetaId", receta.id)
+            intent.putExtra("recetaKey", recetaKey)
             startActivity(intent)
         }
 
-        // Eliminar: dialogo de confirmación
         binding.btnEliminar.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Eliminar receta")
                 .setMessage("¿Seguro que deseas eliminar esta receta?")
-                .setPositiveButton("Sí") { _, _ ->
-                    eliminarReceta(recetaKey)
-                }
+                .setPositiveButton("Sí") { _, _ -> eliminarReceta(recetaKey) }
                 .setNegativeButton("Cancelar", null)
                 .show()
         }
@@ -151,11 +160,11 @@ class DetalleRecetaActivity : AppCompatActivity() {
         val recetasRef = database.getReference("recetas").child(recetaKey)
         recetasRef.removeValue()
             .addOnSuccessListener {
-                Toast.makeText(this, "Receta eliminada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Receta eliminada", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error al eliminar: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Error al eliminar: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

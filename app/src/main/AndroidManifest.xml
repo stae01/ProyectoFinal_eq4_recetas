@@ -26,6 +26,7 @@
         <activity
             android:name=".DetalleRecetaActivity"
             android:exported="false"/>
+        <activity android:name=".ui.crearRecetas.EditarRecetaActivity" />
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
