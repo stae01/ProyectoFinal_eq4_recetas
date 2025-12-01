@@ -1,6 +1,7 @@
 package martinez.kimberli.proyectofinal_eq4_recetas.ui.home
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -258,7 +260,7 @@ class ComidasAdapter(
         val cardView: CardView = view.findViewById(R.id.cardComida)
         val nombre: TextView = view.findViewById(R.id.comida_nombre)
         val categoria: TextView = view.findViewById(R.id.comida_categoria)
-        val etiqueta: TextView = view.findViewById(R.id.comida_etiqueta)
+        //val etiqueta: TextView = view.findViewById(R.id.comida_etiqueta)
         val iconFavorito: ImageView = view.findViewById(R.id.favorite_icon)
     }
 
@@ -272,7 +274,30 @@ class ComidasAdapter(
         val comida = comidas[position]
         holder.nombre.text = comida.nombre
         holder.categoria.text = comida.categoria
-        holder.etiqueta.text = comida.etiquetas?.joinToString(", ") ?: ""
+        //holder.etiqueta.text = comida.etiquetas?.joinToString(", ") ?: ""
+
+        val contenedor = holder.itemView.findViewById<LinearLayout>(R.id.contenedorEtiquetas)
+        contenedor.removeAllViews()
+
+        comida.etiquetas?.forEach { etiqueta ->
+            val chip = TextView(holder.itemView.context).apply {
+                text = etiqueta
+                setBackgroundResource(R.drawable.etiqueta_chip)
+                setTextColor(Color.WHITE)
+                textSize = 10f
+                setPadding(20, 10, 20, 10)
+            }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(8, 8, 8, 8)  // Margen entre las etiquetas
+            chip.layoutParams = params
+
+            contenedor.addView(chip)
+        }
+
 
         if (!comida.imagenUrl.isNullOrBlank()) {
             Glide.with(holder.imagen.context)
